@@ -239,7 +239,12 @@ else % If data type not correctly specified
     
 end % of if strcmp data_type
 
-if ~strcmp(timepoints, 'All') % If user has selected custom time range
+if strcmp(timepoints, 'All') % If all time points within the epoch were included
+    
+    epoch_start_index = 1;
+    epoch_end_index = size(epoched_data, 2);
+    
+else % If user has selected custom time range
     
     % Trim to specified epoch start/end timepoints
     % Find epoch start and end samples (closest timepoints to selected epoch
@@ -312,19 +317,40 @@ if strcmp(eeg_toolbox, 'EEGLAB') == 1 % If using EEGLAB
         
         bin_indices = (EEG.epoch(epoch_no).eventtype);
     
-        % Checking whether event codes are strings and converting to double
-        % precision floating point
-        if ischar(bin_indices{1})
-            
-            for bin_index_temp = 1:length(bin_indices)
-                
-                bin_indices{bin_index_temp} = str2num(bin_indices{bin_index_temp});
-                
-            end % of for bin_index_temp
-        end % of if isstring
+        % If more than one event code in epoch, then bin_indices will be a
+        % cell array
+        if iscell(bin_indices)
         
-        % Convert cell array to vector
-        bin_indices = cell2mat(bin_indices);
+            % Checking whether event codes are strings and converting to double
+            % precision floating point
+            if ischar(bin_indices{1})
+
+                for bin_index_temp = 1:length(bin_indices)
+
+                    bin_indices{bin_index_temp} = str2num(bin_indices{bin_index_temp});
+
+                end % of for bin_index_temp
+                
+            end % of if isstring
+
+            % Convert cell array to vector
+            bin_indices = cell2mat(bin_indices);
+            
+        else % If bin_indices is not a cell array
+            
+            % Checking whether event codes are strings and converting to double
+            % precision floating point
+            if ischar(bin_indices(1))
+
+                for bin_index_temp = 1:length(bin_indices)
+
+                    bin_indices(bin_index_temp) = str2num(bin_indices(bin_index_temp));
+
+                end % of for bin_index_temp
+                
+            end % of if isstring
+            
+        end % of if iscell
         
         for bin_index = 1:length(bin_indices) % For each bin index in the epoch
         
