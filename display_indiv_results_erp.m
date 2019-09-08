@@ -125,13 +125,13 @@ if cfg.stmode == 1 || cfg.stmode == 3 % Spatial and spatiotemporal decoding
     % Title of plot
     if cfg.cross == 0 % If did not perform cross-decoding
         
-        title(['SBJ', num2str(cfg.sbj_todo), ' ', cfg.dcg_labels{1}, ' - analysis ', num2str(1), ' of ', num2str(size(RESULTS.subj_acc, 1))], ...
+        title(['SBJ', num2str(cfg.sbj_todo), ' ', cfg.dcg_labels{cfg.dcg_todo}, ' - analysis ', num2str(1), ' of ', num2str(size(RESULTS.subj_acc, 1))], ...
             'FontSize', 14, ...
             'FontWeight', 'b');
         
     elseif cfg.cross == 1 % If performed cross-decoding
         
-        title(['SBJ', num2str(cfg.sbj_todo), ' ', cfg.dcg_labels{1}, ' train ', cfg.dcg_labels{2}, ' test ', '- analysis ', num2str(1), ' of ', num2str(size(RESULTS.subj_acc, 1))], ...
+        title(['SBJ', num2str(cfg.sbj_todo), ' ', cfg.dcg_labels{cfg.dcg_todo(1)}, ' train ', cfg.dcg_labels{cfg.dcg_todo(2)}, ' test ', '- analysis ', num2str(1), ' of ', num2str(size(RESULTS.subj_acc, 1))], ...
             'FontSize', 14, ...
             'FontWeight', 'b');
         
@@ -173,11 +173,11 @@ elseif cfg.stmode == 2 % Temporal decoding
     % Title of plot
     if cfg.cross == 0 % If did not perform cross-decoding
         
-        title(['SBJ', num2str(cfg.sbj_todo), ' ', cfg.dcg_labels{1}], 'FontSize', 14, 'FontWeight', 'b');
+        title(['SBJ', num2str(cfg.sbj_todo), ' ', cfg.dcg_labels{cfg.dcg_todo}], 'FontSize', 14, 'FontWeight', 'b');
             
     elseif cfg.cross == 1 % If performed cross-decoding
         
-        title(['SBJ', num2str(cfg.sbj_todo), ' ', cfg.dcg_labels{1}, ' train ', cfg.dcg_labels{2}, ' test'], 'FontSize', 14, 'FontWeight', 'b');
+        title(['SBJ', num2str(cfg.sbj_todo), ' ', cfg.dcg_labels{cfg.dcg_todo(1)}, ' train ', cfg.dcg_labels{cfg.dcg_todo(2)}, ' test'], 'FontSize', 14, 'FontWeight', 'b');
         
     end % of if cfg.cross
     
@@ -198,13 +198,13 @@ elseif cfg.stmode == 2 % Temporal decoding
         % Title of plot
         if cfg.cross == 0 % If did not perform cross-decoding
             
-            title(['SBJ', num2str(cfg.sbj_todo), ' ', cfg.dcg_labels{1}, ' Permutation Decoding Results'], ...
+            title(['SBJ', num2str(cfg.sbj_todo), ' ', cfg.dcg_labels{cfg.dcg_todo}, ' Permutation Decoding Results'], ...
                 'FontSize', 14, ...
                 'FontWeight', 'b');
 
         elseif cfg.cross == 1 % If performed cross-decoding
             
-            title(['SBJ', num2str(cfg.sbj_todo), ' ', cfg.dcg_labels{1}, ' train ', cfg.dcg_labels{2}, ' test', ' Permutation Decoding Results'], ...
+            title(['SBJ', num2str(cfg.sbj_todo), ' ', cfg.dcg_labels{cfg.dcg_todo(1)}, ' train ', cfg.dcg_labels{cfg.dcg_todo(2)}, ' test', ' Permutation Decoding Results'], ...
                 'FontSize', 14, ...
                 'FontWeight', 'b');
             
