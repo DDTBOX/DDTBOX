@@ -27,9 +27,11 @@ function [ANALYSIS] = t_tests_classifier_accuracies(ANALYSIS)
 % Example:        [ANALYSIS] = t_tests_classifier_accuracies(ANALYSIS)
 %
 %
-% Copyright (c) 2017 Stefan Bode and contributors
-% 
-% This file is part of DDTBOX.
+% Copyright (c) 2013-2019: DDTBOX has been developed by Stefan Bode 
+% and Daniel Feuerriegel with contributions from Daniel Bennett and 
+% Phillip M. Alday. 
+%
+% This file is part of DDTBOX and has been written by Stefan Bode
 %
 % DDTBOX is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by

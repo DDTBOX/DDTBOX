@@ -84,9 +84,11 @@ function dd_convert_eeg_data(EEG, events_by_cond, save_directory, save_filename,
 % Example:  dd_convert_eeg_data(EEG, events_by_cond, 'DDTBOX-Data/ID1/', 'ID1', 'eeg_toolbox', 'EEGLAB', 'data_type', 'ICAACT', 'channels', 1:10, 'timepoints', [-100, 500], 'svr_labels_vector', svr_labels_vector) 
 %
 %
-% Copyright (c) 2017, Daniel Feuerriegel and contributors 
-% 
-% This file is part of DDTBOX.
+% Copyright (c) 2013-2019: DDTBOX has been developed by Stefan Bode 
+% and Daniel Feuerriegel with contributions from Daniel Bennett and 
+% Phillip M. Alday. 
+%
+% This file is part of DDTBOX and has been written by Daniel Feuerriegel
 %
 % DDTBOX is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
