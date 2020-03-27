@@ -76,6 +76,13 @@ function [acc, feat_weights, feat_weights_corrected] = do_my_classification(vect
 Samples = vectors_train;
 Labels = labels_train;
 
+% Normalise the training data prior to SVM classification/regression, if selected by user.
+if cfg.normalise_data
+   
+    [Samples, feature_min_vals, feature_max_vals] = dd_normalise_data_training(Samples);
+    
+end % of if cfg.normalise_data
+
 
 %% Training the SVMs
 
@@ -94,6 +101,14 @@ end % of if sum
 %% Define Samples and Labels for Testing
 Samples = vectors_test;
 Labels = labels_test;
+
+% Normalise the test data prior to SVM classification/regression, if selected by user.
+if cfg.normalise_data
+   
+    [Samples] = dd_normalise_data_test(Samples, feature_min_vals, feature_max_vals);
+    
+end % of if cfg.normalise_data
+
 
 
 %% Prediction (Test the Classifier)
