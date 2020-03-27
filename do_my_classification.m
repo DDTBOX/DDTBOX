@@ -100,11 +100,11 @@ Labels = labels_test;
 
 if sum(cfg.analysis_mode == [1, 3]) % libsvm
     
-    [predicted_label, accuracy, decision_values] = svmpredict(Labels, Samples, model);
+    [predicted_label, accuracy, decision_values] = svmpredict(Labels, Samples, model, cfg.backend_flags.quiet_mode_flag);
     
 elseif sum(cfg.analysis_mode == [2]) % liblinear
     
-    [predicted_label, accuracy, decision_values] = predict(Labels, sparse(Samples), model); 
+    [predicted_label, accuracy, decision_values] = predict(Labels, sparse(Samples), model, cfg.backend_flags.quiet_mode_flag); 
     
 end % of if sum
 
