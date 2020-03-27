@@ -84,9 +84,11 @@ function dd_convert_eeg_data(EEG, events_by_cond, save_directory, save_filename,
 % Example:  dd_convert_eeg_data(EEG, events_by_cond, 'DDTBOX-Data/ID1/', 'ID1', 'eeg_toolbox', 'EEGLAB', 'data_type', 'ICAACT', 'channels', 1:10, 'timepoints', [-100, 500], 'svr_labels_vector', svr_labels_vector) 
 %
 %
-% Copyright (c) 2017, Daniel Feuerriegel and contributors 
-% 
-% This file is part of DDTBOX.
+% Copyright (c) 2013-2019: DDTBOX has been developed by Stefan Bode 
+% and Daniel Feuerriegel with contributions from Daniel Bennett and 
+% Phillip M. Alday. 
+%
+% This file is part of DDTBOX and has been written by Daniel Feuerriegel
 %
 % DDTBOX is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
@@ -239,7 +241,12 @@ else % If data type not correctly specified
     
 end % of if strcmp data_type
 
-if ~strcmp(timepoints, 'All') % If user has selected custom time range
+if strcmp(timepoints, 'All') % If all time points within the epoch were included
+    
+    epoch_start_index = 1;
+    epoch_end_index = size(epoched_data, 2);
+    
+else % If user has selected custom time range
     
     % Trim to specified epoch start/end timepoints
     % Find epoch start and end samples (closest timepoints to selected epoch
@@ -312,19 +319,40 @@ if strcmp(eeg_toolbox, 'EEGLAB') == 1 % If using EEGLAB
         
         bin_indices = (EEG.epoch(epoch_no).eventtype);
     
-        % Checking whether event codes are strings and converting to double
-        % precision floating point
-        if ischar(bin_indices{1})
-            
-            for bin_index_temp = 1:length(bin_indices)
-                
-                bin_indices{bin_index_temp} = str2num(bin_indices{bin_index_temp});
-                
-            end % of for bin_index_temp
-        end % of if isstring
+        % If more than one event code in epoch, then bin_indices will be a
+        % cell array
+        if iscell(bin_indices)
         
-        % Convert cell array to vector
-        bin_indices = cell2mat(bin_indices);
+            % Checking whether event codes are strings and converting to double
+            % precision floating point
+            if ischar(bin_indices{1})
+
+                for bin_index_temp = 1:length(bin_indices)
+
+                    bin_indices{bin_index_temp} = str2num(bin_indices{bin_index_temp});
+
+                end % of for bin_index_temp
+                
+            end % of if isstring
+
+            % Convert cell array to vector
+            bin_indices = cell2mat(bin_indices);
+            
+        else % If bin_indices is not a cell array
+            
+            % Checking whether event codes are strings and converting to double
+            % precision floating point
+            if ischar(bin_indices(1))
+
+                for bin_index_temp = 1:length(bin_indices)
+
+                    bin_indices(bin_index_temp) = str2num(bin_indices(bin_index_temp));
+
+                end % of for bin_index_temp
+                
+            end % of if isstring
+            
+        end % of if iscell
         
         for bin_index = 1:length(bin_indices) % For each bin index in the epoch
         

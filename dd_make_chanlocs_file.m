@@ -23,9 +23,11 @@ function dd_make_chanlocs_file(EEG, varargin)
 % Usage:          make_chanlocs_file(EEG, 'save_filepath', 'Channel Locations/chanlocs_for_DDTBox.mat');
 %
 %
-% Copyright (c) 2017 Daniel Feuerriegel and contributors
-% 
-% This file is part of DDTBOX.
+% Copyright (c) 2013-2019: DDTBOX has been developed by Stefan Bode 
+% and Daniel Feuerriegel with contributions from Daniel Bennett and 
+% Phillip M. Alday. 
+%
+% This file is part of DDTBOX and has been written by Daniel Feuerriegel
 %
 % DDTBOX is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by

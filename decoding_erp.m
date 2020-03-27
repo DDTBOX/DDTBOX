@@ -21,9 +21,11 @@ function decoding_erp(cfg)
 % Usage:           decoding_erp(cfg)
 %
 %
-% Copyright (c) 2013-2017, Stefan Bode and contributors 
-% 
-% This file is part of DDTBOX.
+% Copyright (c) 2013-2019: DDTBOX has been developed by Stefan Bode 
+% and Daniel Feuerriegel with contributions from Daniel Bennett and 
+% Phillip M. Alday. 
+%
+% This file is part of DDTBOX and has been written by Stefan Bode
 %
 % DDTBOX is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
@@ -333,10 +335,16 @@ for r = 1:size(reduced_data, 2)
         
         for cond = 1:size(reduced_data, 3)
 
-            % extract min number trials for this DCG and run
+            % extract min number epochs for this DCG and run. If the
+            % minimum number of epochs is less than the full data set, a
+            % random subset of epochs is selected
             temp_data = reduced_data{d, r, cond};
-            balanced_data{d,r, cond} = temp_data(:, :, 1:(cfg.mintrs_min(r)));
+            random_trials = sort(randperm(size(temp_data, 3), cfg.mintrs_min(r)));
+            balanced_data{d, r, cond} = temp_data(:, :, random_trials);
+
             clear temp_data;
+            clear random trials;
+            
 
         end % of for cond          
     end % of for d
