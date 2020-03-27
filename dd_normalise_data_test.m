@@ -2,11 +2,9 @@ function [output_data] = dd_normalise_data_test(input_data, feature_min_vals, fe
 %
 % Normalises values within the 0-1 range for each feature. Data are
 % normalised for each feature separately, and are normalised across
-% instances/epochs. Minimum and maximum values computed during this
-% normalisation are then saved for each feature, as these values must also
-% be used to when normalising the test data. Normalisation helps run SVMs
-% much faster, and SVM classification using normalised values can also be
-% more accurate. See the documentation for LIBSVM for further information.
+% instances/epochs. Normalisation helps run SVMs much faster, and SVM 
+% classification using normalised values can also be more accurate. 
+% See the documentation for LIBSVM for further information.
 %
 %
 % Inputs:
