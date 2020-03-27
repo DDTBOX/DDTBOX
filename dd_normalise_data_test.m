@@ -14,11 +14,11 @@ function [output_data] = dd_normalise_data_test(input_data, feature_min_vals, fe
 %   input_data  This is a feature by epoch matrix used for training/test
 %               the classifier or regression model. 
 %
-%  feature_min_vals
+%  feature_min_vals     Minimum values for each feature, calculated from
+%                       the dataset used for training the classifier.
 %
-%
-%  feature_max_vals
-%
+%  feature_max_vals     Maximum values for each feature, calculated from
+%                       the dataset used for training the classifier.
 %
 %		
 % Outputs:
@@ -28,7 +28,7 @@ function [output_data] = dd_normalise_data_test(input_data, feature_min_vals, fe
 %
 %
 %
-% Usage: [output_data, feature_min_vals, feature_max_vals] = dd_normalise_data(input_data, feature_min_vals, feature_max_vals)
+% Usage: [output_data] = dd_normalise_data(input_data, feature_min_vals, feature_max_vals)
 %
 %
 % Copyright (c) 2013-2019: DDTBOX has been developed by Stefan Bode 
@@ -49,6 +49,7 @@ function [output_data] = dd_normalise_data_test(input_data, feature_min_vals, fe
 % 
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 
 %% Normalise the Input Data

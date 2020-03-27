@@ -22,13 +22,18 @@ function [output_data, feature_min_vals, feature_max_vals] = dd_normalise_data_t
 %  output_data  Normalised data produced by the function, for subsequent
 %               classification or regression with SVMs
 %
-%  feature_min_vals
+%  feature_min_vals     Calculated minimum values for each feature, used
+%                       when consequently calculating the maximum values
+%                       and normalising the data. This exact value should also
+%                       be used when normalising the test dataset.
 %
 %
-%  feature_max_vals
+%  feature_max_vals     Calculated maximum values for each feature, used
+%                       when normalising the data. This exact value should also
+%                       be used when normalising the test dataset.
 %
 %
-% Usage: [output_data, feature_min_vals, feature_max_vals] = dd_normalise_data(input_data, feature_min_vals, feature_max_vals)
+% Usage: [output_data, feature_min_vals, feature_max_vals] = dd_normalise_data(input_data)
 %
 %
 % Copyright (c) 2013-2019: DDTBOX has been developed by Stefan Bode 
