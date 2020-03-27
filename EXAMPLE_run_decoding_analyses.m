@@ -165,6 +165,7 @@ ncond = size(cond_labels, 2);
 %% Multivariate Classification/Regression Parameters
 
 analysis_mode = 1; % ANALYSIS mode (1 = SVM classification with LIBSVM / 2 = SVM classification with LIBLINEAR / 3 = SVR with LIBSVM)
+normalise_data = 1; % Normalise data for each feature prior to decoding? 1 = Yes / 0 = No
 stmode = 1; % SPACETIME mode (1 = spatial / 2 = temporal / 3 = spatio-temporal)
 avmode = 1; % AVERAGE mode (1 = no averaging; use single-trial data / 2 = use run-averaged data). Note: Single trials needed for SVR
 window_width_ms = 50; % Width of sliding analysis window in ms
@@ -220,6 +221,7 @@ cfg.permut_rep = permut_rep;
 cfg.feat_weights_mode = feat_weights_mode;
 cfg.display_on = display_on;
 cfg.perm_disp = perm_disp;
+cfg.normalise_data = normalise_data;
 
 
 
