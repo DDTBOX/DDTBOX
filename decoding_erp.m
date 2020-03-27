@@ -172,16 +172,30 @@ elseif cfg.analysis_mode == 3 % SVR (regression)  with LIBSVM
     
 end % of if cfg.analysis_mode
 
-% Merging all flags into a single string
+% Define 'quiet mode' flag to suppress output if selected by user
+if cfg.quiet_mode == 1 % If using quiet mode
+        
+    cfg.backend_flags.quiet_mode_flag = ' -q ';
+
+else
+
+    cfg.backend_flags.quiet_mode_flag = ' ';
+
+end % of if cfg.quiet_mode
+
+% Merging all flags (except quiet mode flag) into a single string
 cfg.backend_flags.all_flags = ['-s ', int2str(cfg.backend_flags.svm_type), ' -c ', num2str(cfg.backend_flags.cost)];
 
 % LIBSVM specific options
 if cfg.backend_flags.kernel_type ~= -1
+    
 	cfg.backend_flags.all_flags = [cfg.backend_flags.all_flags, ' -t ', int2str(cfg.backend_flags.kernel_type)];
+    
 end % of if cfg.backend_flags.kernel_type
 
-% Add any extra flags defined by the user
-cfg.backend_flags.all_flags = [cfg.backend_flags.all_flags, ' ', cfg.backend_flags.extra_flags];
+% Add any extra flags defined by the user and quiet mode flag
+cfg.backend_flags.all_flags = [cfg.backend_flags.quiet_mode_flag, cfg.backend_flags.all_flags, ' ', cfg.backend_flags.extra_flags];
+
 
 
 %% Section 2: Read In Data
