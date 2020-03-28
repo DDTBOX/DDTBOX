@@ -66,30 +66,19 @@ function [output_data, feature_min_vals, feature_max_vals] = dd_normalise_data_t
 % during normalisation, so that they can be used to normalise the
 % test set data in exactly the same way.
 
-% Preallocate normalised input data matrix
-norm_input_data = nan(size(input_data, 1), size(input_data, 2));
-
 % Get minimum values (minimum across instances/epochs) for each feature
 min_by_feature_input_data = min(input_data, [], 1);
 
 % Subtract the minimum values from the data for each feature
-for featureNo = 1:size(input_data, 2)
-
-    norm_input_data(:, featureNo) = input_data(:, featureNo) - min_by_feature_input_data(featureNo);
-
-end % of for featureNo
+% Here, bsxfun tends to be faster than repmat or a loop over features
+norm_input_data = bsxfun(@minus, input_data, min_by_feature_input_data);    
 
 % Get maximum values (maximum across instances/epochs) for each feature,
 % after subtracting the minimum values for each feature
 max_by_feature_input_data = max(norm_input_data, [], 1);
 
-
 % Divide by the maximum values for each feature
-for featureNo = 1:size(norm_input_data, 2)
-
-    norm_input_data(:, featureNo) = norm_input_data(:, featureNo) ./ max_by_feature_input_data(featureNo);
-
-end % of for featureNo
+norm_input_data = bsxfun(@rdivide, norm_input_data, max_by_feature_input_data);
 
 
 
