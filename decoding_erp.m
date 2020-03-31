@@ -685,7 +685,7 @@ fprintf('\nResults are saved for participant %d in directory: %s \n', cfg.sbj, (
 if cfg.display_on == 1
     
     % Load default plotting parameters for single subject plots
-    PLOT = dd_set_plotting_defaults_indiv;
+    PLOT = dd_set_plotting_defaults_indiv(cfg);
     PLOT.channel_names_file = cfg.channel_names_file;
     PLOT.channellocs = cfg.channellocs;
     
