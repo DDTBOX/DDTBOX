@@ -1,78 +1,116 @@
 function cmap = dd_make_colour_maps(varargin)
 %
-% STILL TO MAKE DDTBOX COMPATIBLE HEADER
+% This function generates colour maps for the requested colours. The
+% colours that can be requested include:
+% 'black'
+% 'orange'
+% 'skyblue'
+% 'bluishgreen'
+% 'yellow'
+% 'blue'
+% 'vermillion'
+% 'reddishpurple'
 %
-% STILL TO CONVERT VARIABLE NAMING STYLE
-%
-% cmap = colourFriendlyMaps(map1,varargin)
-% Create colour-blind-friendly colour schemes for graphs
-% To use, simply enter colour names you wish to stitch together for
-% your colour map
-% Example: cmap = colourFriendlyMaps('black','orange');
-% Alternatively, if you wish to create a divergent colour map
-% enter tag 'mode' followed by 'div'
-% code will then extract first colour label as lower bound and
-% final as upper bound
-% Example: cmap = colourFriendlyMaps('mode','div','orange','blue')
-% this will create a colour map where lower values are coloured shades of
-% orange and higher values as shades of blue
-% currently, the middle colour will always be grey
-%
-% % Potential colour scheme names are as follows:
-% -----
-% black, orange, skyBlue, yellow, blue, vermillion, reddishPurple
-% -----
 % Colour schemes are derived from https://jfly.uni-koeln.de/color/
-% Patrick Cooper, November, 2019
+%
+% This function is called by display_group_results_erp and display_indiv_results_erp,
+% but can also be called by custom plotting scripts such as
+% EXAMPLE_plot_individual_results.
+% 
+%
+% Inputs:
+%
+%   Strings containing the colours that are requested to be generated. See
+%   the list of colours available above.
+%
+%
+% Outputs:
+% 
+%   cmap    Colour map matrix containing the colours that were requested
+%
+%
+%
+% Usage:        cmap = dd_make_colour_maps(varargin)
+%
+%
+% Example:      cmap = dd_make_colour_maps('blue', 'orange', 'reddishpurple')
+%
+%
+% Copyright (c) 2013-2020: DDTBOX has been developed by Stefan Bode 
+% and Daniel Feuerriegel with contributions from Daniel Bennett and 
+% Phillip M. Alday, and others. 
+%
+% This file is part of DDTBOX and has been written by Patrick Cooper and
+% has been adapted for DDTBOX by Daniel Feuerriegel
+%
+% DDTBOX is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+% 
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+% 
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+
+%% Handling Variadic Inputs
 
 if nargin == 1
     
     % Only one map selected
-    mapMode = 'qual';
-    mapNames = varargin;
+    map_mode = 'qual';
+    map_names = varargin;
     
 else
     
     if ~ismember(varargin,'mode')
         
-        mapNames = varargin;
-        mapMode = 'qual';
+        map_names = varargin;
+        map_mode = 'qual';
         
     else
         
         % Find 'mode' position within list of arguments
         % Take the next argument as the mapMode
-        modeInd = find(ismember(varargin,'mode'));
-        mapMode = varargin{modeInd + 1};
-        colourInds = ~ismember(varargin, {'mode', varargin{modeInd + 1}});
-        mapNames = varargin(colourInds);
-        nColourBins = 65; % Hard coded for now, can add code to change this if desired by user in a future release
+        mode_ind = find(ismember(varargin,'mode'));
+        map_mode = varargin{mode_ind + 1};
+        colour_inds = ~ismember(varargin, {'mode', varargin{mode_ind + 1}});
+        map_names = varargin(colour_inds);
+        n_colour_bins = 65; % Hard coded for now, can add code to change this if desired by user in a future release
         
     end % of if ~ismember
     
 end % of if nargin
 
-if strcmpi(mapMode,'qual')
+
+
+%% Create Colour Maps
+
+if strcmpi(map_mode,'qual')
     
-    cmap = zeros(length(mapNames), 3);
+    cmap = zeros(length(map_names), 3);
     
-elseif strcmpi(mapMode,'div')
+elseif strcmpi(map_mode,'div')
     
-    cmap = zeros(nColourBins, 3);
-    midPoint = ceil(nColourBins / 2);
-    cmap(midPoint,:) = [185, 185, 185];
+    cmap = zeros(n_colour_bins, 3);
+    mid_point = ceil(n_colour_bins / 2);
+    cmap(mid_point,:) = [185, 185, 185];
     
 end % of if strcmpi mapMode
 
-switch mapMode
+switch map_mode
     
     case 'qual'
         
-        for map_i = 1:length(mapNames)
+        for map_i = 1:length(map_names)
             
-            currentMapName = lower(mapNames{map_i}); % Ensure all lowercase, in case of accidental capitalisation
-            map = assign_colour(currentMapName);
+            current_map_name = lower(map_names{map_i}); % Ensure all lowercase, in case of accidental capitalisation
+            map = assign_colour(current_map_name);
             cmap(map_i,:) = map;
             
         end % of for map_i
@@ -81,25 +119,25 @@ switch mapMode
         
     case 'div'
         
-        %create colour space moving from low colour to midpoint
-        currentMapName = lower(mapNames{1});
-        map=assign_colour(currentMapName);
+        % Create colour space moving from low colour to midpoint
+        current_map_name = lower(map_names{1});
+        map = assign_colour(current_map_name);
         
         % Create linearly spaced colour scheme
         for rgb_i = 1:3
             
-            cmap(1:midPoint - 1, rgb_i) = linspace(map(1,rgb_i), cmap(midPoint,rgb_i), floor(nColourBins / 2));
+            cmap(1:mid_point - 1, rgb_i) = linspace(map(1,rgb_i), cmap(mid_point,rgb_i), floor(n_colour_bins / 2));
             
         end % of for rgb_i
         
         % Create colour space moving from midpoint to high colour
-        currentMapName = lower(mapNames{end});
-        map = assign_colour(currentMapName);
+        current_map_name = lower(map_names{end});
+        map = assign_colour(current_map_name);
         
         % Create linearly spaced colour scheme
         for rgb_i = 1:3
             
-            cmap(midPoint + 1 : end, rgb_i) = linspace(cmap(midPoint,rgb_i), map(1,rgb_i), floor(nColourBins / 2));
+            cmap(mid_point + 1 : end, rgb_i) = linspace(cmap(mid_point, rgb_i), map(1, rgb_i), floor(n_colour_bins / 2));
             
         end % of for rgb_i
         
