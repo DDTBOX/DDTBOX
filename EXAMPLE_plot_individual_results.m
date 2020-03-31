@@ -59,12 +59,19 @@ step_width_ms = 10; % Step size with which the sliding analysis window was moved
 
 % Create labels based on SVM method used (no input required)
 switch analysis_mode
+    
     case 1 % SVC with LIBSVM
+        
         analysis_mode_label = 'SVM_LIBSVM';
+        
     case 2 % SVC with LIBLINEAR
+        
         analysis_mode_label = 'SVM_LIBLIN';
+        
     case 3 % SVR with LIBSVM
+        
         analysis_mode_label = 'SVR_LIBSVM';
+        
 end % of avmode switch
 
 
@@ -75,6 +82,8 @@ end % of avmode switch
 PLOT.perm_disp = 1; % display the results from permuted labels decoding in figure as separate line? 0 = no / 1 = yes
 PLOT.pointzero = 1; % Time of the event of interest (e.g. stimulus presentation), relative to the start of the epoch (in ms)
 
+cfg.plotting_mode = 'classic'; % Plotting style. Current options are 'cooper' and 'classic'
+
 % Temporal decoding results plotting settings
 PLOT.channellocs = ['/Desktop/My Study/Channel Locations/']; % Path of directory containing channel information file
 PLOT.channel_names_file = 'channel_information.mat'; % Name of .mat file containing channel labels and channel locations
@@ -84,7 +93,7 @@ PLOT.temporal_decoding_colormap = 'jet'; % Colormap for temporal decoding result
 PLOT.FigPos = [100, 100, 800, 400]; % Default [100, 100, 800, 400]
 
 % Figure title settings
-PLOT.TitleFontSize = 14; % Default 14
+PLOT.TitleFontSize = 18; % Default 18
 PLOT.TitleFontWeight = 'Bold'; % 'Normal' (Regular) or 'Bold'
 
 
@@ -92,24 +101,77 @@ PLOT.TitleFontWeight = 'Bold'; % 'Normal' (Regular) or 'Bold'
 %% Decoding Performance X and Y Axis Properties
 
 % Axis label properties
-PLOT.xlabel.FontSize = 12; % Default 12
-PLOT.ylabel.FontSize = 12; % Default 12
+PLOT.xlabel.FontSize = 16; % Default 16
+PLOT.ylabel.FontSize = 16; % Default 16
 PLOT.xlabel.FontWeight = 'Bold'; % 'Normal' (Regular) or 'b' / 'Bold'
 PLOT.ylabel.FontWeight = 'Bold'; % 'Normal' (Regular) or 'b' / 'Bold'
+
+% Spacing of X and Y tick labels
+PLOT.x_tick_spacing = 5; % Number of time steps between X ticks
+PLOT.y_tick_spacing = 10; % Spacing of Y axis ticks (default 10)
 
 
 
 %% Define Properties of Lines Showing Decoding Performance
 
 % Actual (not permuted labels) decoding results
-PLOT.Res.Line = '-ks'; % Line colour and style. Default '-ks'
+% Settings depend on plotting mode
+if strcmpi(cfg.plotting_mode, 'cooper')
+    
+    PLOT.Res.Line = '-'; % Line colour and style
+    
+    PLOT.Res.LineColour = 'blue';
+    % Options for current dd_make_colour_maps function
+    % 'black'
+    % 'orange'
+    % 'skyblue'
+    % 'bluishgreen'
+    % 'yellow'
+    % 'blue'
+    % 'vermillion'
+    % 'reddishpurple'
+
+elseif strcmpi(cfg.plotting_mode, 'classic')
+
+    PLOT.Res.Line = '-ks'; % Line colour and style
+    
+    PLOT.Res.LineColour = 'black';
+    
+end % of if strcmpi ANALYSIS.disp.plotting_mode
+
+
 PLOT.Res.LineWidth = 2; % Default 2
 PLOT.Res.MarkerEdgeColor = 'k'; % Default 'k' (black)
 PLOT.Res.MarkerFaceColor = 'w'; % Default 'w' (white)
 PLOT.Res.MarkerSize = 5; % Default 5
 
+
 % Properties of line showing permuted labels / chance results
-PLOT.PermRes.Line = '-ks'; % Line colour and style. Default '-ks'
+% Properties of line showing permuted labels / chance results
+% Settings depend on plotting mode
+if strcmpi(cfg.plotting_mode, 'cooper')
+    
+    PLOT.PermRes.Line = '-'; % Line colour and style
+
+    PLOT.PermRes.LineColour = 'orange';
+    % Options for current dd_make_colour_maps function
+    % 'black'
+    % 'orange'
+    % 'skyblue'
+    % 'bluishgreen'
+    % 'yellow'
+    % 'blue'
+    % 'vermillion'
+    % 'reddishpurple'
+    
+elseif strcmpi(cfg.plotting_mode, 'classic')
+
+    PLOT.PermRes.Line = '-ks'; % Line colour and style
+    
+    PLOT.PermRes.LineColour = 'blue';
+    
+end % of if strcmpi ANALYSIS.disp.plotting_mode
+
 PLOT.PermRes.LineWidth = 2; % Default 2
 PLOT.PermRes.MarkerEdgeColor = 'b'; % Default 'b' (blue)
 PLOT.PermRes.MarkerFaceColor = 'w'; % Default 'w' (white)
@@ -120,7 +182,7 @@ PLOT.PermRes.MarkerSize = 5; % Default 5
 %% Decoding Performance Plot Annotations
 
 % Define properties of line showing event onset
-PLOT.PointZero.Color = 'r'; % Colour of line denoting event onset. Default 'r' (red)
+PLOT.PointZero.Color = [0.5, 0.5, 0.5]; % Colour of line denoting event onset. Default [0.5, 0.5, 0.5] (gray)
 PLOT.PointZero.LineWidth = 3; % Width of line denoting event onset. Default 3
 
 

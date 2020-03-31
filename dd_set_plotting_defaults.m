@@ -142,18 +142,37 @@ end % of if ANALYSIS.analysis_mode
 %% Line Showing Decoding Performance and Error Bars
 
 % Decoding performance results line
-PLOT.Res.Line = '-'; % Line colour and style
 
-PLOT.Res.LineColour = 'blue';
-% Options for current dd_make_colour_maps function
-% 'black'
-% 'orange'
-% 'skyblue'
-% 'bluishgreen'
-% 'yellow'
-% 'blue'
-% 'vermillion'
-% 'reddishpurple'
+% Settings depend on plotting mode
+if strcmpi(ANALYSIS.disp.plotting_mode, 'cooper')
+    
+    PLOT.Res.Line = '-'; % Line colour and style
+    
+    PLOT.Res.LineColour = 'blue';
+    % Options for current dd_make_colour_maps function
+    % 'black'
+    % 'orange'
+    % 'skyblue'
+    % 'bluishgreen'
+    % 'yellow'
+    % 'blue'
+    % 'vermillion'
+    % 'reddishpurple'
+
+elseif strcmpi(ANALYSIS.disp.plotting_mode, 'classic')
+
+    PLOT.Res.Line = '-ks'; % Line colour and style
+    
+    PLOT.Res.LineColour = 'black';
+    
+    % Error bar plotting settings
+    PLOT.Res.Error = 'black'; % Line colour and style
+    PLOT.Res.ErrorLineWidth = 0.5;
+    PLOT.Res.ErrorLine = 'none'; % Disables lines between error bars across steps
+
+    
+end % of if strcmpi ANALYSIS.disp.plotting_mode
+    
 
 PLOT.Res.LineWidth = 2;
 PLOT.Res.MarkerEdgeColor = 'k';
@@ -169,18 +188,36 @@ PLOT.Res.ShadingAlpha = 0.3;
 %% Line Showing Permutation / Chance Results
 
 % Permutation results / chance line
-PLOT.PermRes.Line = '-'; % Line colour and style
 
-PLOT.PermRes.LineColour = 'orange';
-% Options for current dd_make_colour_maps function
-% 'black'
-% 'orange'
-% 'skyblue'
-% 'bluishgreen'
-% 'yellow'
-% 'blue'
-% 'vermillion'
-% 'reddishpurple'
+% Settings depend on plotting mode
+if strcmpi(ANALYSIS.disp.plotting_mode, 'cooper')
+    
+    PLOT.PermRes.Line = '-'; % Line colour and style
+
+    PLOT.PermRes.LineColour = 'orange';
+    % Options for current dd_make_colour_maps function
+    % 'black'
+    % 'orange'
+    % 'skyblue'
+    % 'bluishgreen'
+    % 'yellow'
+    % 'blue'
+    % 'vermillion'
+    % 'reddishpurple'
+    
+elseif strcmpi(ANALYSIS.disp.plotting_mode, 'classic')
+
+    PLOT.PermRes.Line = '-ks'; % Line colour and style
+    
+    PLOT.PermRes.LineColour = 'blue';
+    
+    % Error bar plotting settings
+    PLOT.PermRes.Error = 'blue'; % Line colour and style
+    PLOT.PermRes.ErrorLineWidth = 0.5;
+    PLOT.PermRes.ErrorLine = 'none'; % Disables lines between error bars across steps
+    
+end % of if strcmpi ANALYSIS.disp.plotting_mode
+
 
 PLOT.PermRes.LineWidth = 2;
 PLOT.PermRes.MarkerEdgeColor = 'b';

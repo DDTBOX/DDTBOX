@@ -182,6 +182,7 @@ feat_weights_mode = 1; % Extract feature weights? 0 = no / 1 = yes
 % Single subject decoding results plotting
 display_on = 1; % Display single subject decoding performance results? 0 = no / 1 = yes
 perm_disp = 1; % Display the permuted labels decoding results in figure? 0 = no / 1 = yes
+plotting_mode = 'classic'; % Plotting style. Current options are 'cooper' and 'classic'
 x_tick_spacing_steps = 5; % Number of time steps between X axis time labels. If set to empty ([]) then plotting defaults are used.
 
 % 'quiet mode' option to suppress text output to the command line
@@ -225,6 +226,7 @@ cfg.feat_weights_mode = feat_weights_mode;
 cfg.display_on = display_on;
 cfg.perm_disp = perm_disp;
 cfg.normalise_data = normalise_data;
+cfg.plotting_mode = plotting_mode;
 cfg.x_tick_spacing_steps = x_tick_spacing_steps;
 cfg.quiet_mode = quiet_mode;
 

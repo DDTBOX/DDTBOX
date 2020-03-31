@@ -48,7 +48,7 @@ plot_colour_map = dd_make_colour_maps( ...
 
 
 
-%% Plot the Results
+%% (Spatial/Spatiotemporal Decoding) Plot the Results
 % plots the results depending on s/t-mode (information time-courses for
 % spatial/spatio-temporal decoding; heat maps for temporal decoding)
 
@@ -145,19 +145,31 @@ if ANALYSIS.stmode == 1 || ANALYSIS.stmode == 3 % Spatial and spatiotemporal dec
             'MarkerSize', PLOT.Res.MarkerSize);
         
         hold on;      
-               
-        % Plot shaded error regions
-        % (Code for plotting shaded regions provided by Dr Patrick Cooper - Thanks Patrick!)
+           
         
-        % Generate shading for error regions
-        [patch_x, patch_y] = dd_make_error_bar_object(1:size(temp_data, 2), temp_data, temp_se);
+        if strcmpi(ANALYSIS.disp.plotting_mode, 'cooper')
         
-        SE_shading = patch('xdata', patch_x, 'ydata', patch_y);
+            % Plot shaded error regions
+            % (Code for plotting shaded regions provided by Dr Patrick Cooper - Thanks Patrick!)
+
+            % Generate shading for error regions
+            [patch_x, patch_y] = dd_make_error_bar_object(1:size(temp_data, 2), temp_data, temp_se);
+
+            SE_shading = patch('xdata', patch_x, 'ydata', patch_y);
+
+            SE_shading.FaceAlpha = PLOT.Res.ShadingAlpha; % Transparency
+            SE_shading.FaceColor = plot_colour_map(1,:); % First row of colour map
+            SE_shading.EdgeColor = 'none';
+            
+        elseif strcmpi(ANALYSIS.disp.plotting_mode, 'classic')
+
+            % Plot error bars
+            errorbar(temp_data, temp_se, PLOT.Res.Error, ...
+                'linestyle', PLOT.Res.ErrorLine, ...
+                'linewidth', PLOT.Res.ErrorLineWidth);
         
-        SE_shading.FaceAlpha = PLOT.Res.ShadingAlpha; % Transparency
-        SE_shading.FaceColor = plot_colour_map(1,:); % First row of colour map
-        SE_shading.EdgeColor = 'none';
-        
+        end % of if strcmpi ANALYSIS.disp.plotting_mode
+            
         hold on;
         
         
@@ -175,16 +187,29 @@ if ANALYSIS.stmode == 1 || ANALYSIS.stmode == 3 % Spatial and spatiotemporal dec
             
             hold on;      
 
-            % Generate shading for error regions
-            [perm_patch_x, perm_patch_y] = dd_make_error_bar_object(1:size(temp_perm_data, 2), temp_perm_data, temp_perm_se);
-
-            perm_SE_shading = patch('xdata', perm_patch_x, 'ydata', perm_patch_y);
             
-            perm_SE_shading.FaceAlpha = PLOT.Res.ShadingAlpha; % Transparency
-            perm_SE_shading.FaceColor = plot_colour_map(2,:); % Second row of colour map
-            perm_SE_shading.EdgeColor = 'none';
+            if strcmpi(ANALYSIS.disp.plotting_mode, 'cooper')
+            
+                % Generate shading for error regions
+                [perm_patch_x, perm_patch_y] = dd_make_error_bar_object(1:size(temp_perm_data, 2), temp_perm_data, temp_perm_se);
+
+                perm_SE_shading = patch('xdata', perm_patch_x, 'ydata', perm_patch_y);
+
+                perm_SE_shading.FaceAlpha = PLOT.Res.ShadingAlpha; % Transparency
+                perm_SE_shading.FaceColor = plot_colour_map(2,:); % Second row of colour map
+                perm_SE_shading.EdgeColor = 'none';
+                
+            elseif strcmpi(ANALYSIS.disp.plotting_mode, 'classic')
+                
+                % Plot error bars
+                errorbar(temp_perm_data, temp_perm_se, PLOT.PermRes.Error, ...
+                    'linestyle', PLOT.PermRes.ErrorLine, ...
+                    'linewidth', PLOT.PermRes.ErrorLineWidth);
+            
+            end % of if strcmpi ANALYSIS.disp.plotting_mode
             
             hold on;
+            
             
         end % of if ANALYSIS.permdisp
         

@@ -91,11 +91,11 @@ end % of if nargin
 
 %% Create Colour Maps
 
-if strcmpi(map_mode,'qual')
+if strcmpi(map_mode, 'qual')
     
     cmap = zeros(length(map_names), 3);
     
-elseif strcmpi(map_mode,'div')
+elseif strcmpi(map_mode, 'div')
     
     cmap = zeros(n_colour_bins, 3);
     mid_point = ceil(n_colour_bins / 2);
