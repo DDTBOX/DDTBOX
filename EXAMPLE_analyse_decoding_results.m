@@ -201,8 +201,9 @@ permdisp = 1; % Display results from permuted labels analyses in the figure as s
 disp.sign = 1; % Mark statistically significant steps in results figure? 0 = no / 1 = yes
 plot_robust = 0; % Choose estimate of location to plot. 0 = arithmetic mean / 1 = trimmed mean / 2 = median
 plot_robust_trimming = 20; % Percentage trimming if using the trimmed mean
+disp.plotting_mode = 'classic'; % Plotting style (options include 'cooper' and 'classic')
 disp.temporal_decoding_colormap = 'jet'; % Colormap for temporal decoding scalp maps (default 'jet')
-
+disp.x_tick_spacing_steps = [5]; % Number of time steps between X axis time labels. If set to empty ([]) then plotting defaults are used.
 
 
 
@@ -304,7 +305,9 @@ ANALYSIS.cluster_test_alpha = cluster_test_alpha;
 ANALYSIS.disp.on = disp.on;
 ANALYSIS.permdisp = permdisp;
 ANALYSIS.disp.sign = disp.sign;
+ANALYSIS.disp.plotting_mode = disp.plotting_mode;
 ANALYSIS.disp.temporal_decoding_colormap = disp.temporal_decoding_colormap;
+ANALYSIS.disp.x_tick_spacing_steps = disp.x_tick_spacing_steps;
 ANALYSIS.plot_robust = plot_robust;
 ANALYSIS.plot_robust_trimming = plot_robust_trimming;
 ANALYSIS.fw.do = fw.do;

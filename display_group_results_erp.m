@@ -37,8 +37,19 @@ function display_group_results_erp(ANALYSIS, PLOT)
 
 
 
-%% Plot the Results
-% plots the results depending on s/t-mode (information time-courses for
+%% Set Plotting Colourmaps
+
+% Set colour maps for plotting. Function provided by Dr Patrick Cooper (thanks Patrick!)
+plot_colour_map = dd_make_colour_maps( ...
+    PLOT.Res.LineColour, ...
+    PLOT.PermRes.LineColour, ...
+    PLOT.Sign.LineColor);
+
+
+
+%% (Spatial/Spatiotemporal Decoding) Plot the Results
+
+% Plots the results depending on s/t-mode (information time-courses for
 % spatial/spatio-temporal decoding; heat maps for temporal decoding)
 
 if ANALYSIS.stmode == 1 || ANALYSIS.stmode == 3 % Spatial and spatiotemporal decoding
@@ -46,9 +57,9 @@ if ANALYSIS.stmode == 1 || ANALYSIS.stmode == 3 % Spatial and spatiotemporal dec
     % Plot the information time-course for each analysis
     for ana = 1:size(ANALYSIS.RES.mean_subj_acc, 1)
         
-        fighandle = figure('Position', PLOT.FigPos);
+        fighandle = figure('color', PLOT.background_colour, 'Position', PLOT.FigPos);
         
-        % get results to plot        
+        % Calculate measure of central tendency for the group data      
         if ANALYSIS.plot_robust == 0 % If plotting the arithmetic mean
             
             temp_data(1,:) = ANALYSIS.RES.mean_subj_acc(ana,:);
@@ -69,7 +80,8 @@ if ANALYSIS.stmode == 1 || ANALYSIS.stmode == 3 % Spatial and spatiotemporal dec
 
         end % of if ANALYSIS.plot_robust
             
-        % get permutation results to plot
+        % Calculate measure of central tendency for the permuted labels
+        % decoding results
         if ANALYSIS.permstats == 1 % If testing against theoretical chance
             
             temp_perm_data(1, 1:size(ANALYSIS.RES.mean_subj_acc(ana,:), 2)) = ANALYSIS.chancelevel;
@@ -96,32 +108,70 @@ if ANALYSIS.stmode == 1 || ANALYSIS.stmode == 3 % Spatial and spatiotemporal dec
             
         end % of if ANALYSIS.permstats
         
-        % Mark statistically significant points        
+        
+        % Mark statistically significant time windows        
         if ANALYSIS.disp.sign == 1
             
             for step = 1:size(temp_data, 2)
                 
-                % plot if found significant...
+                % Add background shading if statistically significant...
                 if ANALYSIS.RES.h(ana, step) == 1
                     
-                        line([step, step], PLOT.Sign.LinePos,'Color', PLOT.Sign.LineColor, 'LineWidth', PLOT.Sign.LineWidth);
-                        hold on;
+                    % Note, in order to show the effect, we need to slightly broaden the
+                    % patch by one sample (otherwise it is invisble - hence the -1 +1 here)
+                    x_data = [step - 1, step - 1, step + 1, step + 1];
+                    y_data = [PLOT.Y_min, PLOT.Y_max, PLOT.Y_max, PLOT.Y_min];
+
+                    % Settings for significance marker patch object (used
+                    % for adding shaded background colours at significant time
+                    % steps)
+                    sig_markers = patch('xdata', x_data, 'ydata', y_data);
+                    sig_markers.FaceAlpha = PLOT.Sign.FaceAlpha;
+                    sig_markers.FaceColor = plot_colour_map(3,:);
+                    sig_markers.EdgeColor = 'none';
+                    
+                    hold on;
                     
                 end % of if ANALYSIS.RES.h
             end % of for step
         end % of if ANALYSIS.disp.sign
         
-        % plot main results
-        plot(temp_data, PLOT.Res.Line, 'LineWidth', PLOT.Res.LineWidth, ...
+        
+        % Plot group-averaged decoding accuracy (or median, trimmed mean etc.)
+        plot(temp_data, PLOT.Res.Line, ...
+            'Color', plot_colour_map(1, :), ...
+            'LineWidth', PLOT.Res.LineWidth, ...
             'MarkerEdgeColor', PLOT.Res.MarkerEdgeColor,...
             'MarkerFaceColor', PLOT.Res.MarkerFaceColor, ...
             'MarkerSize', PLOT.Res.MarkerSize);
-        hold on;      
         
-        % plot error bars
-        errorbar(temp_data, temp_se, PLOT.Res.Error, ...
-            'linestyle', PLOT.Res.ErrorLine, ...
-            'linewidth', PLOT.Res.ErrorLineWidth);
+        hold on;      
+           
+        
+        % Error bar/region plotting style depends on plotting mode
+        if strcmpi(ANALYSIS.disp.plotting_mode, 'cooper')
+        
+            % Plot shaded error regions
+            % (Code for plotting shaded regions provided by Dr Patrick Cooper - Thanks Patrick!)
+
+            % Generate shading for error regions
+            [patch_x, patch_y] = dd_make_error_bar_object(1:size(temp_data, 2), temp_data, temp_se);
+
+            SE_shading = patch('xdata', patch_x, 'ydata', patch_y);
+
+            SE_shading.FaceAlpha = PLOT.Res.ShadingAlpha; % Transparency
+            SE_shading.FaceColor = plot_colour_map(1,:); % First row of colour map
+            SE_shading.EdgeColor = 'none';
+            
+        elseif strcmpi(ANALYSIS.disp.plotting_mode, 'classic')
+
+            % Plot error bars
+            errorbar(temp_data, temp_se, PLOT.Res.Error, ...
+                'linestyle', PLOT.Res.ErrorLine, ...
+                'linewidth', PLOT.Res.ErrorLineWidth);
+        
+        end % of if strcmpi ANALYSIS.disp.plotting_mode
+            
         hold on;
         
         
@@ -131,16 +181,37 @@ if ANALYSIS.stmode == 1 || ANALYSIS.stmode == 3 % Spatial and spatiotemporal dec
         if ANALYSIS.permdisp == 1 % If select to plot permutation decoding results
             
             plot(temp_perm_data, PLOT.PermRes.Line, ...
+                'Color', plot_colour_map(2, :), ...
                 'LineWidth', PLOT.PermRes.LineWidth, ...
                 'MarkerEdgeColor', PLOT.PermRes.MarkerEdgeColor,...
                 'MarkerFaceColor', PLOT.PermRes.MarkerFaceColor, ...
                 'MarkerSize', PLOT.PermRes.MarkerSize);
+            
             hold on;      
 
-            errorbar(temp_perm_data, temp_perm_se, PLOT.PermRes.Error, ...
-                'linestyle', PLOT.PermRes.ErrorLine,...
-                'linewidth', PLOT.PermRes.ErrorLineWidth);
+            
+            if strcmpi(ANALYSIS.disp.plotting_mode, 'cooper')
+            
+                % Generate shading for error regions
+                [perm_patch_x, perm_patch_y] = dd_make_error_bar_object(1:size(temp_perm_data, 2), temp_perm_data, temp_perm_se);
+
+                perm_SE_shading = patch('xdata', perm_patch_x, 'ydata', perm_patch_y);
+
+                perm_SE_shading.FaceAlpha = PLOT.Res.ShadingAlpha; % Transparency
+                perm_SE_shading.FaceColor = plot_colour_map(2,:); % Second row of colour map
+                perm_SE_shading.EdgeColor = 'none';
+                
+            elseif strcmpi(ANALYSIS.disp.plotting_mode, 'classic')
+                
+                % Plot error bars
+                errorbar(temp_perm_data, temp_perm_se, PLOT.PermRes.Error, ...
+                    'linestyle', PLOT.PermRes.ErrorLine, ...
+                    'linewidth', PLOT.PermRes.ErrorLineWidth);
+            
+            end % of if strcmpi ANALYSIS.disp.plotting_mode
+            
             hold on;
+            
             
         end % of if ANALYSIS.permdisp
         
@@ -152,8 +223,8 @@ if ANALYSIS.stmode == 1 || ANALYSIS.stmode == 3 % Spatial and spatiotemporal dec
         axis([1, ANALYSIS.laststep, PLOT.Y_min, PLOT.Y_max]);
         
         % Axis Labels
-        xlabel(PLOT.xlabel.Text, 'FontSize', PLOT.xlabel.FontSize, 'FontWeight', PLOT.xlabel.FontWeight);
-        ylabel(PLOT.ylabel.Text, 'FontSize', PLOT.ylabel.FontSize, 'FontWeight', PLOT.ylabel.FontWeight);
+        xlabel([PLOT.xlabel.Text], 'FontSize', PLOT.xlabel.FontSize, 'FontWeight', PLOT.xlabel.FontWeight);
+        ylabel([PLOT.ylabel.Text], 'FontSize', PLOT.ylabel.FontSize, 'FontWeight', PLOT.ylabel.FontWeight);
         
         % Title
         if size(ANALYSIS.DCG,1) == 1 % If did not perform cross-decoding
@@ -168,22 +239,42 @@ if ANALYSIS.stmode == 1 || ANALYSIS.stmode == 3 % Spatial and spatiotemporal dec
            
         end % of if size
 
-        % mark point zero (data was time-locked to this event)
+        % Mark point zero (data was time-locked to this event)
         line([PLOT.PointZero.Point, PLOT.PointZero.Point], [PLOT.Y_max, PLOT.Y_min], ...
             'Color', PLOT.PointZero.Color,...
             'LineWidth', PLOT.PointZero.LineWidth);
         
         
         
-        %% Define Ticks and Axis Labels
+        %% Define X/Y Ticks and Axis Labels
         
-        set(gca,'Ytick', PLOT.Ytick, 'Xtick', PLOT.Xtick);
-        set(gca, 'XTickLabel', PLOT.XtickLabel);
+        % X and Y ticks properties
+        set(gca,'Ytick', PLOT.Ytick, ...
+            'Xtick', PLOT.Xtick, ...
+            'fontsize', PLOT.XY_tick_labels_fontsize, ...
+            'fontname','Arial');
+        
+        % Convert X axis ticks to strings in a cell. This is to avoid the
+        % weird X axis tick mislocalisation bug that sometimes occurs in
+        % MATLAB
+        clear XTickLabel_Cell;
+        
+        for x_tick_number = 1:length(PLOT.XtickLabel)
+
+            XTickLabel_Cell{x_tick_number} = PLOT.XtickLabel(x_tick_number);
+
+        end % of for x_tick_number
+        
+        set(gca, 'XTickLabel', XTickLabel_Cell);
 
         % clear temp-data
         clear temp_data;   
         clear temp_se; 
+        
+        % Remove top and right borders and associated X/Y ticks
+        box off;
     
+        
         
     end % of for ana (looping across channels)
     
@@ -262,10 +353,12 @@ elseif ANALYSIS.stmode == 2 % If using temporal decoding
                 'FontSize', PLOT.TitleFontSize, ...
                 'FontWeight', PLOT.TitleFontWeight);
         
+            
     % Plot estimate of group decoding accuracy relative to chance or permutation
     % decoding accuracy (actual - chance | actual - permutation)
     figure;
     
+    % Plot data on scalp map
     topoplot_decoding(temp_data - temp_perm_data, FW_ANALYSIS.chanlocs, ...
         'style', 'both', ...
         'electrodes', 'ptslabels', ...

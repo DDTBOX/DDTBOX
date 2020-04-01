@@ -62,10 +62,14 @@ function [output_data] = dd_normalise_data_test(input_data, feature_min_vals, fe
 
 % Subtract the minimum values from the data for each feature
 % Here, bsxfun tends to be faster than repmat or a loop over features
-norm_input_data = bsxfun(@minus, input_data, feature_min_vals);    
+norm_input_data = bsxfun(@minus, ...
+    input_data, ...
+    feature_min_vals);    
 
 % Divide by the maximum values for each feature
-norm_input_data = bsxfun(@rdivide, norm_input_data, feature_max_vals);
+norm_input_data = bsxfun(@rdivide, ...
+    norm_input_data, ...
+    feature_max_vals);
 
 
 

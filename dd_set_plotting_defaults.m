@@ -46,11 +46,20 @@ function PLOT = dd_set_plotting_defaults(ANALYSIS)
 
 %% Figure Position on the Screen
 
-PLOT.FigPos = [100 100 800 400];
+PLOT.FigPos = [100, 100, 800, 400];
+
+
+%% Plot Background Colour
+
+PLOT.background_colour = [1, 1, 1]; % Default is [1, 1, 1] white
 
 
 
 %% X/Y-Axis Limits and Tick Marks
+
+% Set font size for X and Y axis tick labels
+PLOT.XY_tick_labels_fontsize = 14;
+
 
 % Y-axis depends on analysis mode
 if ANALYSIS.analysis_mode ~= 3 % If not using SVR
@@ -67,21 +76,38 @@ elseif ANALYSIS.analysis_mode == 3 % If using SVR
     
 end % of if ANALYSIS.analysis_mode
 
+% Set X axis min/max
 PLOT.X_min = 1; % X axis lower bound (first time point)
 PLOT.X_max = ANALYSIS.xaxis_scale(2,end); % Maximum value of X axis value. 
+
+% Determine how many time steps between X axis ticks
+% (e.g., with 10ms steps, a value of 5 means one X axis label every 50ms)
+if isempty(ANALYSIS.disp.x_tick_spacing_steps)
+
+    % Set default of 5 time windows spacing
+    PLOT.x_tick_spacing = 5;
+
+else % If this has been set by user
+    
+    PLOT.x_tick_spacing = ANALYSIS.disp.x_tick_spacing_steps;
+    
+end % of if isempty
+
 % Default is ANALYSIS.xaxis_scale(2,end) which is the last time window selected for group-level analyses.
 PLOT.Xsteps = ANALYSIS.step_width_ms;
 
+% Determine X and Y axis tick values
 PLOT.Ytick = [PLOT.Y_min : PLOT.Ysteps : PLOT.Y_max];
-PLOT.Xtick = [ANALYSIS.xaxis_scale(1,1) : ANALYSIS.xaxis_scale(1,end)];
+PLOT.Xtick = [ANALYSIS.xaxis_scale(1,1) : PLOT.x_tick_spacing : ANALYSIS.xaxis_scale(1, end)];
 
-PLOT.XtickLabel = ANALYSIS.xaxis_scale(2,:) - ANALYSIS.pointzero; 
+% Assign X axis tick labels
+PLOT.XtickLabel = ANALYSIS.xaxis_scale(2, 1 : PLOT.x_tick_spacing : end) - ANALYSIS.pointzero; 
 
 
 
 %% Line Marking Event Onset
 
-PLOT.PointZero.Color = 'r'; % Colour of line denoting event onset
+PLOT.PointZero.Color = [0.5, 0.5, 0.5]; % Colour of line denoting event onset. Default [0.5, 0.5, 0.5] gray
 PLOT.PointZero.LineWidth = 3; % Width of line denoting event onset
 PLOT.PointZero.Point = find(ANALYSIS.data(3,:) == 1);
 
@@ -89,9 +115,27 @@ PLOT.PointZero.Point = find(ANALYSIS.data(3,:) == 1);
 
 %% Statistical Significance Markers
 
-PLOT.Sign.LineColor = 'y';
+% Shading colour denoting statistically significant time steps
+PLOT.Sign.LineColor = 'reddishpurple';
+% Options for current dd_make_colour_maps function
+% 'black'
+% 'orange'
+% 'skyblue'
+% 'bluishgreen'
+% 'yellow'
+% 'blue'
+% 'vermillion'
+% 'reddishpurple'
+
+% Width of shaded region
 PLOT.Sign.LineWidth = 10;
 
+% Alpha level of shaded regions. Range 0-1 (values approaching 1 are more
+% opaque colours)
+PLOT.Sign.FaceAlpha = .3;
+
+% Start/end points of shaded region on Y axis (automatically adjusts to Y
+% axis min/max values for the plot).
 if ANALYSIS.analysis_mode ~= 3 % If not using SVR
     
     PLOT.Sign.LinePos = [PLOT.Y_min + 0.5, PLOT.Y_max - 0.5];
@@ -104,48 +148,104 @@ end % of if ANALYSIS.analysis_mode
 
 
 
-%% Line Showing Decoding Performance and Error Bars
+%% Lines Showing Decoding Performance and Error Regions
 
 % Decoding performance results line
-PLOT.Res.Line = '-ks'; % Line colour and style
+% Settings depend on plotting mode
+if strcmpi(ANALYSIS.disp.plotting_mode, 'cooper')
+    
+    PLOT.Res.Line = '-'; % Line colour and style
+    
+    PLOT.Res.LineColour = 'blue';
+    % Options for current dd_make_colour_maps function
+    % 'black'
+    % 'orange'
+    % 'skyblue'
+    % 'bluishgreen'
+    % 'yellow'
+    % 'blue'
+    % 'vermillion'
+    % 'reddishpurple'
+
+elseif strcmpi(ANALYSIS.disp.plotting_mode, 'classic')
+
+    PLOT.Res.Line = '-ks'; % Line colour and style
+    
+    PLOT.Res.LineColour = 'black';
+    
+    % Error bar plotting settings
+    PLOT.Res.Error = 'black'; % Line colour and style
+    PLOT.Res.ErrorLineWidth = 0.5;
+    PLOT.Res.ErrorLine = 'none'; % Disables lines between error bars across steps
+    
+end % of if strcmpi ANALYSIS.disp.plotting_mode
+    
+% Line width for measure of central tendency (group mean/median/etc.)
 PLOT.Res.LineWidth = 2;
+
+% Data point marker attributes
 PLOT.Res.MarkerEdgeColor = 'k';
 PLOT.Res.MarkerFaceColor = 'w';
 PLOT.Res.MarkerSize = 5;
 
-% Error bar plotting
-PLOT.Res.Error = 'k'; % Line colour and style
-PLOT.Res.ErrorLineWidth = 0.5;
-PLOT.Res.ErrorLine = 'none'; % Disables lines between error bars across steps
+% Alpha level (0-1) for shading that depicts standard errors. Higher values
+% denote stronger (more opaque) shading
+PLOT.Res.ShadingAlpha = 0.3;
 
 
 
 %% Line Showing Permutation / Chance Results
 
 % Permutation results / chance line
-PLOT.PermRes.Line = '-ks'; % Line colour and style
+% Settings depend on plotting mode
+if strcmpi(ANALYSIS.disp.plotting_mode, 'cooper')
+    
+    PLOT.PermRes.Line = '-'; % Line colour and style
+
+    PLOT.PermRes.LineColour = 'orange';
+    % Options for current dd_make_colour_maps function
+    % 'black'
+    % 'orange'
+    % 'skyblue'
+    % 'bluishgreen'
+    % 'yellow'
+    % 'blue'
+    % 'vermillion'
+    % 'reddishpurple'
+    
+elseif strcmpi(ANALYSIS.disp.plotting_mode, 'classic')
+
+    PLOT.PermRes.Line = '-ks'; % Line colour and style
+    
+    PLOT.PermRes.LineColour = 'blue';
+    
+    % Error bar plotting settings
+    PLOT.PermRes.Error = 'blue'; % Line colour and style
+    PLOT.PermRes.ErrorLineWidth = 0.5;
+    PLOT.PermRes.ErrorLine = 'none'; % Disables lines between error bars across steps
+    
+end % of if strcmpi ANALYSIS.disp.plotting_mode
+
+% Line width for measure of central tendency (group mean/median/etc.)
 PLOT.PermRes.LineWidth = 2;
+
+% Data point marker attributes
 PLOT.PermRes.MarkerEdgeColor = 'b';
 PLOT.PermRes.MarkerFaceColor = 'w';
 PLOT.PermRes.MarkerSize = 5;
-
-% Error bar plotting
-PLOT.PermRes.Error = 'b'; % Line colour and style
-PLOT.PermRes.ErrorLineWidth = 0.5;
-PLOT.PermRes.ErrorLine = 'none'; % Disables lines between error bars across steps
 
 
 
 %% Axis Labels
 
 % X and Y axis labels
-PLOT.xlabel.FontSize = 12;
-PLOT.ylabel.FontSize = 12;
+PLOT.xlabel.FontSize = 16;
+PLOT.ylabel.FontSize = 16;
 PLOT.xlabel.FontWeight = 'Bold'; % 'Normal' (Regular) or 'b' / 'Bold'
 PLOT.ylabel.FontWeight = 'Bold'; % 'Normal' (Regular) or 'b' / 'Bold'
 
 % X axis label text
-PLOT.xlabel.Text = 'Time-steps [ms]';
+PLOT.xlabel.Text = 'Time-Steps [ms]';
 
 % Y axis label text
 if ANALYSIS.analysis_mode ~= 3 % If not using SVR
@@ -154,7 +254,7 @@ if ANALYSIS.analysis_mode ~= 3 % If not using SVR
     
 elseif ANALYSIS.analysis_mode == 3 % If using SVR
     
-    PLOT.ylabel.Text = 'Fisher-transformed correlation coeff';
+    PLOT.ylabel.Text = 'Fisher-Transformed Correlation Coeff';
     
 end % of if ANALYSIS.analysis_mode
 
@@ -162,7 +262,7 @@ end % of if ANALYSIS.analysis_mode
 
 %% Figure Title Properties
 
-PLOT.TitleFontSize = 14;
+PLOT.TitleFontSize = 18;
 PLOT.TitleFontWeight = 'Bold'; % 'Normal' (Regular) or 'b' / 'Bold'
 
 % Text specifying the decoding method used

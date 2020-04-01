@@ -56,6 +56,7 @@ function [output_data, feature_min_vals, feature_max_vals] = dd_normalise_data_t
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+
 %% Normalise the Input Data
 
 % Normalise the data to be between 0 and 1 (results in faster SVMs with
@@ -71,14 +72,18 @@ min_by_feature_input_data = min(input_data, [], 1);
 
 % Subtract the minimum values from the data for each feature
 % Here, bsxfun tends to be faster than repmat or a loop over features
-norm_input_data = bsxfun(@minus, input_data, min_by_feature_input_data);    
+norm_input_data = bsxfun(@minus, ...
+    input_data, ...
+    min_by_feature_input_data);    
 
 % Get maximum values (maximum across instances/epochs) for each feature,
 % after subtracting the minimum values for each feature
 max_by_feature_input_data = max(norm_input_data, [], 1);
 
 % Divide by the maximum values for each feature
-norm_input_data = bsxfun(@rdivide, norm_input_data, max_by_feature_input_data);
+norm_input_data = bsxfun(@rdivide, ...
+    norm_input_data, ...
+    max_by_feature_input_data);
 
 
 
