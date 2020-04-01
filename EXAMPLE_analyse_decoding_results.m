@@ -10,7 +10,7 @@
 % https://github.com/DDTBOX/DDTBOX/wiki
 %
 %
-% Copyright (c) 2013-2019: DDTBOX has been developed by Stefan Bode 
+% Copyright (c) 2013-2020: DDTBOX has been developed by Stefan Bode 
 % and Daniel Feuerriegel with contributions from Daniel Bennett and 
 % Phillip M. Alday. 
 %

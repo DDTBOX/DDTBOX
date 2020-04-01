@@ -29,7 +29,7 @@ function [output_data] = dd_normalise_data_test(input_data, feature_min_vals, fe
 % Usage: [output_data] = dd_normalise_data(input_data, feature_min_vals, feature_max_vals)
 %
 %
-% Copyright (c) 2013-2019: DDTBOX has been developed by Stefan Bode 
+% Copyright (c) 2013-2020: DDTBOX has been developed by Stefan Bode 
 % and Daniel Feuerriegel with contributions from Daniel Bennett and 
 % Phillip M. Alday. 
 %
