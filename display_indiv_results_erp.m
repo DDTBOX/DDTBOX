@@ -23,7 +23,7 @@ function display_indiv_results_erp(cfg, RESULTS, PLOT)
 % Usage:        display_indiv_results_erp(cfg, RESULTS, PLOT)
 %
 %
-% Copyright (c) 2013-2019: DDTBOX has been developed by Stefan Bode 
+% Copyright (c) 2013-2020: DDTBOX has been developed by Stefan Bode 
 % and Daniel Feuerriegel with contributions from Daniel Bennett and 
 % Phillip M. Alday. 
 %

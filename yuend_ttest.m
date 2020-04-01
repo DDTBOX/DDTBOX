@@ -66,7 +66,7 @@ function [h_yuen, p, CI, t_yuen, diff, se, tcrit, df] = yuend_ttest(cond_1_data,
 % Example:  [h_yuen, p, CI, t_yuen, diff, se, tcrit, df] = yuend_ttest(cond_1_data, cond_2_data, 'alpha', 0.05, 'percent', 20, 'tail', 'both')
 %
 %
-% Copyright (c) 2013-2019: DDTBOX has been developed by Stefan Bode 
+% Copyright (c) 2013-2020: DDTBOX has been developed by Stefan Bode 
 % and Daniel Feuerriegel with contributions from Daniel Bennett and 
 % Phillip M. Alday. 
 %

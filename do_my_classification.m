@@ -52,7 +52,7 @@ function [acc, feat_weights, feat_weights_corrected] = do_my_classification(vect
 %                               method in Haufe et al. (2014).
 %
 %
-% Copyright (c) 2013-2019: DDTBOX has been developed by Stefan Bode 
+% Copyright (c) 2013-2020: DDTBOX has been developed by Stefan Bode 
 % and Daniel Feuerriegel with contributions from Daniel Bennett and 
 % Phillip M. Alday. 
 %
