@@ -32,6 +32,14 @@
 
 
 
+%% Housekeeping
+
+% Clears the workspace and closes all figure windows
+clear variables;
+close all;
+
+
+
 %% Filepaths of Single Subject Results Files
 
 % The following variables are used to locate the saved single subject results files
@@ -82,7 +90,7 @@ end % of avmode switch
 PLOT.perm_disp = 1; % display the results from permuted labels decoding in figure as separate line? 0 = no / 1 = yes
 PLOT.pointzero = 1; % Time of the event of interest (e.g. stimulus presentation), relative to the start of the epoch (in ms)
 
-cfg.plotting_mode = 'classic'; % Plotting style. Current options are 'cooper' and 'classic'
+cfg.plotting_mode = 'cooper'; % Plotting style. Current options are 'cooper' and 'classic'
 
 % Temporal decoding results plotting settings
 PLOT.channellocs = ['/Desktop/My Study/Channel Locations/']; % Path of directory containing channel information file
@@ -91,6 +99,9 @@ PLOT.temporal_decoding_colormap = 'jet'; % Colormap for temporal decoding result
 
 % figure position on the screen
 PLOT.FigPos = [100, 100, 800, 400]; % Default [100, 100, 800, 400]
+
+% Background colour of the figure. Default is [1, 1, 1] white
+PLOT.background_colour = [1, 1, 1]; 
 
 % Figure title settings
 PLOT.TitleFontSize = 18; % Default 18
@@ -109,6 +120,9 @@ PLOT.ylabel.FontWeight = 'Bold'; % 'Normal' (Regular) or 'b' / 'Bold'
 % Spacing of X and Y tick labels
 PLOT.x_tick_spacing = 5; % Number of time steps between X ticks
 PLOT.y_tick_spacing = 10; % Spacing of Y axis ticks (default 10)
+
+% Font size of X and Y axis tick labels
+PLOT.XY_tick_labels_fontsize = 14;
 
 
 

@@ -34,6 +34,14 @@
 
 
 
+%% Housekeeping
+
+% Clears the workspace and closes all figure windows
+clear variables;
+close all;
+
+
+
 %% General Settings
 
 % Full filepath of group results file
@@ -51,7 +59,7 @@ PLOT.feature_weights_results = 0;
 PLOT.background_colour = [1, 1, 1]; % RGB values. Default [1, 1, 1] (white)
 
 % Plotting style (options include 'cooper' and 'classic')
-ANALYSIS.disp.plotting_mode = 'classic';
+ANALYSIS.disp.plotting_mode = 'cooper';
 
 
 
@@ -299,8 +307,11 @@ PLOT.PointZero.LineWidth = 3; % Width of line denoting event onset. Default 3
 PLOT.PointZero.Point = find(ANALYSIS.data(3,:) == 1);
 
 % Define properties of statistical significance markers
-% PLOT.Sign.LineColor = 'y'; % Default 'y' (yellow)
 PLOT.Sign.LineWidth = 10; % Default 10
+
+% Alpha level of shaded statistical significance regions. Range 0-1 (values approaching 1 are more
+% opaque colours)
+PLOT.Sign.FaceAlpha = .3;
 
 % Positions of statistical significance markers
 if ANALYSIS.analysis_mode ~= 3 % If not using SVR

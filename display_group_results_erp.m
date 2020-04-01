@@ -39,8 +39,7 @@ function display_group_results_erp(ANALYSIS, PLOT)
 
 %% Set Plotting Colourmaps
 
-% Set colour maps for plotting. Code provided by Dr Patrick Cooper (thanks
-% Patrick!)
+% Set colour maps for plotting. Function provided by Dr Patrick Cooper (thanks Patrick!)
 plot_colour_map = dd_make_colour_maps( ...
     PLOT.Res.LineColour, ...
     PLOT.PermRes.LineColour, ...
@@ -49,7 +48,8 @@ plot_colour_map = dd_make_colour_maps( ...
 
 
 %% (Spatial/Spatiotemporal Decoding) Plot the Results
-% plots the results depending on s/t-mode (information time-courses for
+
+% Plots the results depending on s/t-mode (information time-courses for
 % spatial/spatio-temporal decoding; heat maps for temporal decoding)
 
 if ANALYSIS.stmode == 1 || ANALYSIS.stmode == 3 % Spatial and spatiotemporal decoding
@@ -122,9 +122,11 @@ if ANALYSIS.stmode == 1 || ANALYSIS.stmode == 3 % Spatial and spatiotemporal dec
                     x_data = [step - 1, step - 1, step + 1, step + 1];
                     y_data = [PLOT.Y_min, PLOT.Y_max, PLOT.Y_max, PLOT.Y_min];
 
-                    % Settings for significance marker patch object
+                    % Settings for significance marker patch object (used
+                    % for adding shaded background colours at significant time
+                    % steps)
                     sig_markers = patch('xdata', x_data, 'ydata', y_data);
-                    sig_markers.FaceAlpha = .3;
+                    sig_markers.FaceAlpha = PLOT.Sign.FaceAlpha;
                     sig_markers.FaceColor = plot_colour_map(3,:);
                     sig_markers.EdgeColor = 'none';
                     
@@ -135,8 +137,7 @@ if ANALYSIS.stmode == 1 || ANALYSIS.stmode == 3 % Spatial and spatiotemporal dec
         end % of if ANALYSIS.disp.sign
         
         
-        % Plot group-averaged decoding accuracy (or median, trimmed mean
-        % etc.)
+        % Plot group-averaged decoding accuracy (or median, trimmed mean etc.)
         plot(temp_data, PLOT.Res.Line, ...
             'Color', plot_colour_map(1, :), ...
             'LineWidth', PLOT.Res.LineWidth, ...
@@ -147,6 +148,7 @@ if ANALYSIS.stmode == 1 || ANALYSIS.stmode == 3 % Spatial and spatiotemporal dec
         hold on;      
            
         
+        % Error bar/region plotting style depends on plotting mode
         if strcmpi(ANALYSIS.disp.plotting_mode, 'cooper')
         
             % Plot shaded error regions
@@ -351,6 +353,7 @@ elseif ANALYSIS.stmode == 2 % If using temporal decoding
                 'FontSize', PLOT.TitleFontSize, ...
                 'FontWeight', PLOT.TitleFontWeight);
         
+            
     % Plot estimate of group decoding accuracy relative to chance or permutation
     % decoding accuracy (actual - chance | actual - permutation)
     figure;

@@ -15,9 +15,11 @@ function PLOT = dd_set_plotting_defaults_indiv(cfg)
 %           This includes variables that are used to customise plot
 %           settings.
 %
+%
 % Outputs:
 %
 % PLOT      Structure containing settings for plotting group-level decoding performance results
+%
 %
 % Usage:   PLOT = dd_set_plotting_defaults_indiv
 %
@@ -50,13 +52,14 @@ PLOT.FigPos = [100, 100, 800, 400];
 
 
 %% Plot Background Colour
-PLOT.background_colour = [1, 1, 1];
+
+PLOT.background_colour = [1, 1, 1]; % Default [1, 1, 1] white
 
 
 
 %% Figure Title
 
-PLOT.TitleFontSize = 18;
+PLOT.TitleFontSize = 18; % Title font size
 PLOT.TitleFontWeight = 'Bold'; % 'Normal' (Regular) or 'Bold'
 
 
@@ -126,10 +129,17 @@ elseif strcmpi(cfg.plotting_mode, 'classic')
     
 end % of if strcmpi ANALYSIS.disp.plotting_mode
    
+% Decoding performance line width
 PLOT.Res.LineWidth = 2;
+
+% Data point marker properties
 PLOT.Res.MarkerEdgeColor = 'k';
 PLOT.Res.MarkerFaceColor = 'w';
 PLOT.Res.MarkerSize = 5;
+
+
+
+%% Lines Showing Permuted-Labels Decoding Performance
 
 % Properties of line showing permutation / chance results
 % Settings depend on plotting mode
@@ -161,7 +171,10 @@ elseif strcmpi(cfg.plotting_mode, 'classic')
     
 end % of if strcmpi ANALYSIS.disp.plotting_mode
 
+% Permuted-labels results line width
 PLOT.PermRes.LineWidth = 2;
+
+% Data point marker properties
 PLOT.PermRes.MarkerEdgeColor = 'b';
 PLOT.PermRes.MarkerFaceColor = 'w';
 PLOT.PermRes.MarkerSize = 5;
@@ -171,7 +184,7 @@ PLOT.PermRes.MarkerSize = 5;
 %% Line Marking Event Onset
 
 % Define properties of line showing event onset
-PLOT.PointZero.Color = [0.5, 0.5, 0.5]; % Colour of line denoting event onset
+PLOT.PointZero.Color = [0.5, 0.5, 0.5]; % Colour of line denoting event onset. Default [0.5, 0.5, 0.5] gray
 PLOT.PointZero.LineWidth = 3; % Width of line denoting event onset
 
 

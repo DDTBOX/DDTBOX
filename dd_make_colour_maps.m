@@ -21,7 +21,8 @@ function cmap = dd_make_colour_maps(varargin)
 % Inputs:
 %
 %   Strings containing the colours that are requested to be generated. See
-%   the list of colours available above.
+%   the list of colours available above. New colours can be added by
+%   modifying this function.
 %
 %
 % Outputs:
@@ -40,8 +41,7 @@ function cmap = dd_make_colour_maps(varargin)
 % and Daniel Feuerriegel with contributions from Daniel Bennett and 
 % Phillip M. Alday, and others. 
 %
-% This file is part of DDTBOX and has been written by Patrick Cooper and
-% has been adapted for DDTBOX by Daniel Feuerriegel
+% This file is part of DDTBOX and has been written by Patrick Cooper
 %
 % DDTBOX is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ if nargin == 1
     
 else
     
-    if ~ismember(varargin,'mode')
+    if ~ismember(varargin, 'mode')
         
         map_names = varargin;
         map_mode = 'qual';
@@ -77,11 +77,11 @@ else
         
         % Find 'mode' position within list of arguments
         % Take the next argument as the mapMode
-        mode_ind = find(ismember(varargin,'mode'));
+        mode_ind = find(ismember(varargin, 'mode'));
         map_mode = varargin{mode_ind + 1};
         colour_inds = ~ismember(varargin, {'mode', varargin{mode_ind + 1}});
         map_names = varargin(colour_inds);
-        n_colour_bins = 65; % Hard coded for now, can add code to change this if desired by user in a future release
+        n_colour_bins = 65; % Hard coded for now, can add code to change this in a future release
         
     end % of if ~ismember
     

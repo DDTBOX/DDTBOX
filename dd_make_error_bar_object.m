@@ -36,8 +36,7 @@ function [patch_x, patch_y] = dd_make_error_bar_object(x_values, y_values, error
 % and Daniel Feuerriegel with contributions from Daniel Bennett and 
 % Phillip M. Alday, and others. 
 %
-% This file is part of DDTBOX and has been written by Patrick Cooper and
-% has been adapted for DDTBOX by Daniel Feuerriegel
+% This file is part of DDTBOX and has been written by Patrick Cooper.
 %
 % DDTBOX is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
@@ -68,5 +67,6 @@ x_vals_patch = [x_values, fliplr(x_values)];
 x_vals_patch(isnan(y_vals_patch)) = [];
 y_vals_patch(isnan(y_vals_patch)) = [];
 
+% Assign values to the variables output by the function
 patch_x = x_vals_patch;
 patch_y = y_vals_patch(1,:);

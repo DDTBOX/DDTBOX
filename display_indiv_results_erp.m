@@ -46,8 +46,7 @@ function display_indiv_results_erp(cfg, RESULTS, PLOT)
 
 %% Set Plotting Colourmaps
 
-% Set colour maps for plotting. Code provided by Dr Patrick Cooper (thanks
-% Patrick!)
+% Set colour maps for plotting. Code provided by Dr Patrick Cooper (thanks Patrick!)
 plot_colour_map = dd_make_colour_maps( ...
     PLOT.Res.LineColour, ...
     PLOT.PermRes.LineColour);
