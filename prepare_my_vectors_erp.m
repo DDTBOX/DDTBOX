@@ -436,12 +436,20 @@ for main_analysis = 1:nr_rounds % 1=real decoding, 2=permutation test
                 
                     if main_analysis == 1 % Actual decoding analyses
                         
-                        fprintf('Classifying step %d of %d steps, cross-validation step %d in cycle %d: \n', s, nsteps, cv, rep);
+                        if cfg.quiet_mode < 2
+                        
+                            fprintf('Classifying step %d of %d steps, cross-validation step %d in cycle %d: \n', s, nsteps, cv, rep);
+                        
+                        end % of if cfg.quiet_mode
                         
                     elseif main_analysis == 2 % Permuted labels decoding analyses
                         
-                        fprintf('Permutation test step %d of %d steps, cross-validation step %d in cycle %d: \n', s, nsteps, cv, rep);
+                        if cfg.quiet_mode < 2
                         
+                            fprintf('Permutation test step %d of %d steps, cross-validation step %d in cycle %d: \n', s, nsteps, cv, rep);
+                        
+                        end % of if cfg.quiet_mode
+                            
                     end % of if main_analysis
                     
                     % Train and test the classifier
@@ -471,6 +479,11 @@ for main_analysis = 1:nr_rounds % 1=real decoding, 2=permutation test
         end % of for cv (cross-validation step)
             
     end % repetition of cross_validation rounds
-    fprintf('\nFinished classification. \n');  
+    
+    if cfg.quiet_mode < 3
+      
+        fprintf('\nFinished classification. \n');  
+    
+    end % of if cfg.quiet_mode
     
 end % of for main_analysis (real decoding vs permutation test data)   

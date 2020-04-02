@@ -186,7 +186,10 @@ plotting_mode = 'classic'; % Plotting style. Current options are 'cooper' and 'c
 x_tick_spacing_steps = 5; % Number of time steps between X axis time labels. If set to empty ([]) then plotting defaults are used.
 
 % 'quiet mode' option to suppress text output to the command line
-quiet_mode = 0; % 1 = Suppress output / 0 = Allow text output to command line
+quiet_mode = 0; 
+% 1 = Allow all text output to command line
+% 2 = Show only important warnings and analysis related info (makes decoding run faster)
+% 3 = No text output
 
 
 
