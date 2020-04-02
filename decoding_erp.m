@@ -74,12 +74,20 @@ cfg.n_all_permutation = cfg.cross_val_steps * cfg.permut_rep;
 
 if cfg.cross == 0 % If not performing cross-decoding
     
-    fprintf('\nDCG %d will be analysed. \n',cfg.dcg_todo);     
+    if cfg.quiet_mode < 3
+                            
+        fprintf('\nDCG %d will be analysed. \n',cfg.dcg_todo);     
+    
+    end % of if cfg.quiet_mode
     
 elseif cfg.cross > 0
     
-    fprintf('\nDCG %d and %d will be analysed for cross-condition classification. \n', cfg.dcg_todo(1), cfg.dcg_todo(2));
+    if cfg.quiet_mode < 3
+                                  
+        fprintf('\nDCG %d and %d will be analysed for cross-condition classification. \n', cfg.dcg_todo(1), cfg.dcg_todo(2));
     
+    end % of if cfg.quiet_mode
+        
 end % of if cfg.cross
 
 % For SVR dcg_todo defines condition that the target variable comes from 
@@ -91,13 +99,21 @@ if cfg.analysis_mode == 3
 end % of if cfg.analysis_mode
     
 % Report information related to trial numbers and cross-validation settings
-fprintf('\nCross-validation defaults for single-trial decoding:\n');
-fprintf('\n%d steps with %d cycles resulting in %d analyses.\n', cfg.cross_val_steps, cfg.n_rep_cross_val, cfg.n_all_analyses);
-fprintf('\nBalanced number of examples will be used for all analyses by default.\n');
+if cfg.quiet_mode < 3
+      
+    fprintf('\nCross-validation defaults for single-trial decoding:\n');
+    fprintf('\n%d steps with %d cycles resulting in %d analyses.\n', cfg.cross_val_steps, cfg.n_rep_cross_val, cfg.n_all_analyses);
+    fprintf('\nBalanced number of examples will be used for all analyses by default.\n');
+
+end % of if cfg.quiet_mode
 
 if cfg.perm_test == 1 % if also doing permuted labels analyses
     
-    fprintf('\nRandom-label analysis will be based on %d analyses.\n', cfg.n_all_permutation);
+    if cfg.quiet_mode < 3
+                                  
+        fprintf('\nRandom-label analysis will be based on %d analyses.\n', cfg.n_all_permutation);
+    
+    end % of if cfg.quiet_mode
     
 end % of if cfg.perm_test
 
@@ -173,7 +189,7 @@ elseif cfg.analysis_mode == 3 % SVR (regression)  with LIBSVM
 end % of if cfg.analysis_mode
 
 % Define 'quiet mode' flag to suppress output if selected by user
-if cfg.quiet_mode == 1 % If using quiet mode
+if cfg.quiet_mode > 1 % If using quiet mode
         
     cfg.backend_flags.quiet_mode_flag = ' -q ';
 
@@ -202,18 +218,33 @@ cfg.backend_flags.all_flags = [cfg.backend_flags.quiet_mode_flag, cfg.backend_fl
 % basic data in: eeg_sorted_cond{run, cond}(timepoints, channels, trials)
 % *** converted into work_data{run, cond}(timepoints, channels, trials)
 
-fprintf('\nReading in data. Please wait... \n');
+if cfg.quiet_mode < 3
+      
+    fprintf('\nReading in data. Please wait... \n');
+
+end % of if cfg.quiet_mode
+
 open_name = (cfg.data_open_name);
 load(open_name);
-fprintf('\nData loading complete.\n');
+
+if cfg.quiet_mode < 3
+
+    fprintf('\nData loading complete.\n');
+    
+end % of if cfg.quiet_mode
 
 % read in regression labels if performing SVR
 if cfg.analysis_mode == 3
     
     cfg.regress_open_name = cfg.regress_label_name;
-    cfg.regress_data = load(cfg.regress_open_name);    
-    fprintf('\nLoaded regressand labels.\n');
+    cfg.regress_data = load(cfg.regress_open_name);  
+    
+    if cfg.quiet_mode < 3
 
+        fprintf('\nLoaded regressand labels.\n');
+
+    end % of if cfg.quiet_mode
+        
 end % of if cfg.analysis_mode
 
 work_data = eval(cfg.data_struct_name); % Copies eeg_sorted_cond data into work_data
@@ -223,7 +254,12 @@ cfg.nchannels=cfg.nchannels;
 % array format
 if isstruct(work_data)
     
-    fprintf('\nConverting EEG-structure into cell.\n');
+    if cfg.quiet_mode < 3
+
+        fprintf('\nConverting EEG-structure into cell.\n');
+
+    end % of if cfg.quiet_mode
+    
     wd = struct2cell(work_data); 
     clear work_data;
     
@@ -258,20 +294,36 @@ if size(work_data{1,1}, 1) == cfg.nchannels && size(work_data{1,1}, 2) ~= cfg.nc
         end % of for column        
     end % of for row
     
-    fprintf('\nData was converted into the correct format: eeg_sorted_cond{run,cond}(timepoints,channels,trials).\n\n');   
+    if cfg.quiet_mode < 3
+    
+        fprintf('\nData was converted into the correct format: eeg_sorted_cond{run,cond}(timepoints,channels,trials).\n\n');   
 
+    end % of if cfg.quiet_mode
+    
 elseif size(work_data{1,1}, 1) ~= cfg.nchannels && size(work_data{1,1}, 2) == cfg.nchannels  
     
-    fprintf('\nData seems to be in the correct format: eeg_sorted_cond{run,cond}(timepoints,channels,trials).\n\n');
+    if cfg.quiet_mode < 3
+    
+        fprintf('\nData seems to be in the correct format: eeg_sorted_cond{run,cond}(timepoints,channels,trials).\n\n');
+    
+    end % of if cfg.quiet_mode
     
 elseif size(work_data{1,1}, 1) == cfg.nchannels && size(work_data{1,1}, 2) == cfg.nchannels
     
-    fprintf('\nNumber of channels = number of time points? Check whether data is in the correct format.\n\n');
+    if cfg.quiet_mode < 3
     
+        fprintf('\nNumber of channels = number of time points? Check whether data is in the correct format.\n\n');
+    
+    end % of if cfg.quiet_mode
+        
 elseif size(work_data{1,1}, 1) ~= cfg.nchannels && size(work_data{1,1}, 2) ~= cfg.nchannels 
     
-    fprintf('\nData might not be in the required format: eeg_sorted_cond{run,cond}(timepoints,channels,trials). \n\n');
+    if cfg.quiet_mode < 3
     
+        fprintf('\nData might not be in the required format: eeg_sorted_cond{run,cond}(timepoints,channels,trials). \n\n');
+    
+    end % of if cfg.quiet_mode
+        
 end % of if size work_data
 
 
@@ -290,7 +342,12 @@ if cfg.analysis_mode ~= 3 % SVR does not require conditions
             
             for cond = 1:size(cfg.dcg{cfg.dcg_todo(d)}, 2) % for all conditions specified
 
-                fprintf('Run %d: Extracting condition %d as specified in DCG %d.\n', r, (cfg.dcg{cfg.dcg_todo(d)}(cond)), cfg.dcg_todo(d));
+                if cfg.quiet_mode < 2
+                
+                    fprintf('Run %d: Extracting condition %d as specified in DCG %d.\n', r, (cfg.dcg{cfg.dcg_todo(d)}(cond)), cfg.dcg_todo(d));
+                
+                end % of if cfg.quiet_mode
+                
                 temp(:,:,:) = work_data{r, (cfg.dcg{cfg.dcg_todo(d)}(cond))}(:,:,:);
                 reduced_data{d, r, cond} = temp; 
                 clear temp;                    
@@ -340,8 +397,12 @@ for r = 1:size(reduced_data, 2)
     
 end % of for r
 
-fprintf('\nMinimum number of trials per condition computed for participant %d \n', cfg.sbj_todo);
+if cfg.quiet_mode < 3
 
+    fprintf('\nMinimum number of trials per condition computed for participant %d \n', cfg.sbj_todo);
+
+end % of if cfg.quiet_mode
+    
 % select min trials in all conditions
 for r = 1:size(reduced_data, 2)
     
@@ -364,7 +425,12 @@ for r = 1:size(reduced_data, 2)
     end % of for d
 end % of for r
 
-fprintf('\nSame number of trials used for all conditions within each run.\n');
+if cfg.quiet_mode < 3
+    
+    fprintf('\nSame number of trials used for all conditions within each run.\n');
+
+end % of if cfg.quiet_mode
+
 clear reduced_data;
 
 
@@ -399,8 +465,12 @@ if cfg.avmode == 1 % single-trials
         end % of for cond
     end % of for d
     
-    fprintf('\nData from all runs (if more than one) have been pooled into one dataset.\n\n');    
+    if cfg.quiet_mode < 3
     
+        fprintf('\nData from all runs (if more than one) have been pooled into one dataset.\n\n');    
+    
+    end % of if cfg.quiet_mode
+        
 elseif cfg.avmode == 2 % run averages
     
     for d = 1:size(balanced_data, 1)
@@ -415,8 +485,12 @@ elseif cfg.avmode == 2 % run averages
         end % of for r
     end % of for d
     
-    fprintf('\nRun averages based across trials were computed for each condition.\n\n');
+    if cfg.quiet_mode < 3
     
+        fprintf('\nRun averages based across trials were computed for each condition.\n\n');
+    
+    end % of if cfg.quiet_mode
+        
 end % of if cfg.avmode
 
 clear balanced_data;
@@ -469,7 +543,11 @@ if cfg.avmode == 1
                             
                         else % If using old SVR labels matrices DDTBOX will automatically convert to an array
                             
-                            fprintf('\n WARNING: SVR labels are stored as a matrix. Coverting to cell array SVR_labels.\n Each cell number corresponds to a column in the SVR labels matrix.\n\n'); 
+                            if cfg.quiet_mode < 3
+                            
+                                fprintf('\n WARNING: SVR labels are stored as a matrix. Coverting to cell array SVR_labels.\n Each cell number corresponds to a column in the SVR labels matrix.\n\n'); 
+                            
+                            end % of if cfg.quiet_mode
                             
                             % Convert matrix into array and remove NaN
                             % values for each cell (may arise when there are uneven
@@ -550,7 +628,13 @@ if cfg.avmode == 1
                     clear temp_training_set;
                     clear temp_training_labels;
                     
-                    fprintf('Data sorted for single-trial analysis: specified DCG %d condition %d cross-validation step %d of cycle %d. \n', d, con, cv, ncv);
+                    if cfg.quiet_mode > 1
+                    
+                    else
+                        
+                        fprintf('Data sorted for single-trial analysis: specified DCG %d condition %d cross-validation step %d of cycle %d. \n', d, con, cv, ncv);
+                    
+                    end % of if cfg.quiet_mode
                     
                 end % of for d
                 
@@ -618,8 +702,16 @@ end % of if cfg.avmode
 
 %% Section 7: Build labels and do classification
 
-fprintf('\nStarting with vector preparation... \n');
+if cfg.quiet_mode > 1
+                            
+else
+                        
+    fprintf('\nStarting with vector preparation... \n');
+
+end % of if cfg.quiet_mode
+
 [RESULTS] = prepare_my_vectors_erp(training_set, test_set, cfg);
+
 
 %% Section 8: Average Results Over Cross-Validation Steps
 
@@ -651,7 +743,11 @@ for na = 1:size(RESULTS.prediction_accuracy, 2)
         
 end % of for na
 
-fprintf('\nResults are computed and averaged for participant %d \n', cfg.sbj);
+if cfg.quiet_mode < 3
+
+    fprintf('\nResults are computed and averaged for participant %d \n', cfg.sbj);
+
+end % of if cfg.quiet_mode
 
 %% Section 9: Save The Decoding Results
 % Saves decoding results to a .mat file in the output directory. Some analysis
@@ -676,8 +772,11 @@ end % of if cfg.cross
     
 save(savename, 'cfg', 'RESULTS'); % Save cfg and RESULTS structures into a .mat file
 
-fprintf('\nResults are saved for participant %d in directory: %s \n', cfg.sbj, (cfg.output_dir));
+if cfg.quiet_mode < 3
 
+    fprintf('\nResults are saved for participant %d in directory: %s \n', cfg.sbj, (cfg.output_dir));
+
+end % of if cfg.quiet_mode
 
 %% Section 10: Display Individual Results
 % Displays decoding results for the single subject dataset.
