@@ -119,7 +119,7 @@ if ANALYSIS.stmode == 1 || ANALYSIS.stmode == 3 % Spatial and spatiotemporal dec
                     
                     % Note, in order to show the effect, we need to slightly broaden the
                     % patch by one sample (otherwise it is invisble - hence the -1 +1 here)
-                    x_data = [step - 1, step - 1, step + 1, step + 1];
+                    x_data = [step - 0.5, step - 0.5, step + 0.5, step + 0.5];
                     y_data = [PLOT.Y_min, PLOT.Y_max, PLOT.Y_max, PLOT.Y_min];
 
                     % Settings for significance marker patch object (used
