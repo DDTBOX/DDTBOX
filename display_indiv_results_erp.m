@@ -23,7 +23,7 @@ function display_indiv_results_erp(cfg, RESULTS, PLOT)
 % Usage:        display_indiv_results_erp(cfg, RESULTS, PLOT)
 %
 %
-% Copyright (c) 2013-2019: DDTBOX has been developed by Stefan Bode 
+% Copyright (c) 2013-2020: DDTBOX has been developed by Stefan Bode 
 % and Daniel Feuerriegel with contributions from Daniel Bennett and 
 % Phillip M. Alday. 
 %
@@ -43,23 +43,39 @@ function display_indiv_results_erp(cfg, RESULTS, PLOT)
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+
+%% Set Plotting Colourmaps
+
+% Set colour maps for plotting. Code provided by Dr Patrick Cooper (thanks Patrick!)
+plot_colour_map = dd_make_colour_maps( ...
+    PLOT.Res.LineColour, ...
+    PLOT.PermRes.LineColour);
+
+
+
 %% Display Results
 
-% determine the x-axis scaling
+% Determine the x-axis scaling
 nsteps = size(RESULTS.subj_acc, 2);
+
+
+
+%% For Spatial and Spatiotemporal Decoding
 
 if cfg.stmode == 1 || cfg.stmode == 3 % Spatial and spatiotemporal decoding
 
-    figure('Position', PLOT.FigPos);
+    figure('color', PLOT.background_colour, 'Position', PLOT.FigPos);
     
     % Plot actual decoding results
     temp_data(1,:) = RESULTS.subj_acc(1,:);
     
     plot(temp_data, PLOT.Res.Line, ...
+        'Color', plot_colour_map(1, :), ...
         'LineWidth', PLOT.Res.LineWidth, ...
         'MarkerEdgeColor',PLOT.Res.MarkerEdgeColor, ...
         'MarkerFaceColor', PLOT.Res.MarkerFaceColor, ...
         'MarkerSize', PLOT.Res.MarkerSize);
+    
     hold on;
 
     % Plot permutation decoding results
@@ -68,6 +84,7 @@ if cfg.stmode == 1 || cfg.stmode == 3 % Spatial and spatiotemporal decoding
         temp_perm_data(1,:) = RESULTS.subj_perm_acc(1,:);
         
         plot(temp_perm_data, PLOT.PermRes.Line, ...
+            'Color', plot_colour_map(2, :), ...
             'LineWidth', PLOT.PermRes.LineWidth, ...
             'MarkerEdgeColor', PLOT.PermRes.MarkerEdgeColor, ...
             'MarkerFaceColor', PLOT.PermRes.MarkerFaceColor, ...
@@ -95,8 +112,9 @@ if cfg.stmode == 1 || cfg.stmode == 3 % Spatial and spatiotemporal decoding
         
     end % of if cfg.analysis_mode
 
+    
     % X axis tick labels
-    XTickLabels(1:1:nsteps) = (((1:1:nsteps) * cfg.step_width_ms) - cfg.step_width_ms) - cfg.pointzero; 
+    XTickLabels(1 : ceil(nsteps / PLOT.x_tick_spacing)) = (((1 : PLOT.x_tick_spacing : nsteps) * cfg.step_width_ms) - cfg.step_width_ms) - cfg.pointzero; 
     
     % Determine point of event onset relative to start of epoch (in steps)
     plotting_point_zero = (cfg.pointzero / cfg.step_width_ms) + 1;
@@ -107,35 +125,53 @@ if cfg.stmode == 1 || cfg.stmode == 3 % Spatial and spatiotemporal decoding
         line([plotting_point_zero, plotting_point_zero], [100 30], ...
             'Color', PLOT.PointZero.Color, ...
             'LineWidth', PLOT.PointZero.LineWidth);
-
+        
         % Set locations of X and Y axis tickmarks
-        set(gca, 'Ytick', [0:5:100], 'Xtick', [1:1:nsteps]);
+        set(gca, 'Ytick', [0 : PLOT.y_tick_spacing : 100], ...
+            'Xtick', [1 : PLOT.x_tick_spacing : nsteps], ...
+            'fontsize', PLOT.XY_tick_labels_fontsize, ...
+            'fontname','Arial');
         
     elseif cfg.analysis_mode == 3 % If performed regression
         
-        line([plotting_point_zero, plotting_point_zero], [1 -1], ...
+        line([plotting_point_zero, plotting_point_zero], [1, -1], ...
             'Color', 'r', ...
             'LineWidth', 3);
 
         % Set locations of X and Y axis tickmarks
-        set(gca,'Ytick', [-1:0.2:1], 'Xtick', [1:1:nsteps]);
+        set(gca,'Ytick', [-1 : PLOT.y_tick_spacing_regress : 1], ...
+            'Xtick', [1 : PLOT.x_tick_spacing : nsteps], ...
+            'fontsize', PLOT.XY_tick_labels_fontsize, ...
+            'fontname','Arial');
         
     end % of if cfg.analysis_mode
 
-    set(gca, 'XTickLabel', XTickLabels);
+    % Convert X axis ticks to strings in a cell. This is to avoid the
+    % weird X axis tick mislocalisation bug that sometimes occurs in
+    % MATLAB
+    clear XTickLabel_Cell;
+    
+    for x_tick_number = 1:length(XTickLabels)
+        
+        XTickLabels_Cell{x_tick_number} = XTickLabels(x_tick_number);
+        
+    end % of for x_tick_number
+
+    % Set X tick labels
+    set(gca, 'XTickLabel', XTickLabels_Cell);
 
     % Title of plot
     if cfg.cross == 0 % If did not perform cross-decoding
         
         title(['SBJ', num2str(cfg.sbj_todo), ' ', cfg.dcg_labels{cfg.dcg_todo}, ' - analysis ', num2str(1), ' of ', num2str(size(RESULTS.subj_acc, 1))], ...
-            'FontSize', 14, ...
-            'FontWeight', 'b');
+            'FontSize', PLOT.TitleFontSize, ...
+            'FontWeight', PLOT.TitleFontWeight);
         
     elseif cfg.cross == 1 % If performed cross-decoding
         
         title(['SBJ', num2str(cfg.sbj_todo), ' ', cfg.dcg_labels{cfg.dcg_todo(1)}, ' train ', cfg.dcg_labels{cfg.dcg_todo(2)}, ' test ', '- analysis ', num2str(1), ' of ', num2str(size(RESULTS.subj_acc, 1))], ...
-            'FontSize', 14, ...
-            'FontWeight', 'b');
+            'FontSize', PLOT.TitleFontSize, ...
+            'FontWeight', PLOT.TitleFontWeight);
         
     end % of if cfg.cross
     
@@ -150,6 +186,13 @@ if cfg.stmode == 1 || cfg.stmode == 3 % Spatial and spatiotemporal decoding
 
     end % of if cfg.perm.disp
 
+    % Remove top and right borders and associated X/Y ticks
+    box off;
+    
+    
+    
+    %% For Temporal Decoding
+    
 elseif cfg.stmode == 2 % Temporal decoding
 
     % Load channel information (locations and labels)
@@ -175,11 +218,15 @@ elseif cfg.stmode == 2 % Temporal decoding
     % Title of plot
     if cfg.cross == 0 % If did not perform cross-decoding
         
-        title(['SBJ', num2str(cfg.sbj_todo), ' ', cfg.dcg_labels{cfg.dcg_todo}], 'FontSize', 14, 'FontWeight', 'b');
+        title(['SBJ', num2str(cfg.sbj_todo), ' ', cfg.dcg_labels{cfg.dcg_todo}], ...
+            'FontSize', PLOT.TitleFontSize, ...
+            'FontWeight', PLOT.TitleFontWeight);
             
     elseif cfg.cross == 1 % If performed cross-decoding
         
-        title(['SBJ', num2str(cfg.sbj_todo), ' ', cfg.dcg_labels{cfg.dcg_todo(1)}, ' train ', cfg.dcg_labels{cfg.dcg_todo(2)}, ' test'], 'FontSize', 14, 'FontWeight', 'b');
+        title(['SBJ', num2str(cfg.sbj_todo), ' ', cfg.dcg_labels{cfg.dcg_todo(1)}, ' train ', cfg.dcg_labels{cfg.dcg_todo(2)}, ' test'], ...
+            'FontSize', PLOT.TitleFontSize, ...
+            'FontWeight', PLOT.TitleFontWeight);
         
     end % of if cfg.cross
     

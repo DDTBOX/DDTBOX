@@ -83,7 +83,7 @@ function [Results] = multcomp_blair_karniski_permtest(cond1_data, cond2_data, va
 % Example:          [Results] = multcomp_blair_karniski_permtest(cond1_data, cond2_data, 'alpha', 0.05, 'iterations', 10000, 'use_yuen', 1, 'percent', 20, 'tail', 'both') 
 %
 %
-% Copyright (c) 2013-2019: DDTBOX has been developed by Stefan Bode 
+% Copyright (c) 2013-2020: DDTBOX has been developed by Stefan Bode 
 % and Daniel Feuerriegel with contributions from Daniel Bennett and 
 % Phillip M. Alday. 
 %

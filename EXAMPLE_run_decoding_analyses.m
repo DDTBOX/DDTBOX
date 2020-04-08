@@ -11,7 +11,7 @@
 % This script calls decoding_erp.m
 %
 %
-% Copyright (c) 2013-2019: DDTBOX has been developed by Stefan Bode 
+% Copyright (c) 2013-2020: DDTBOX has been developed by Stefan Bode 
 % and Daniel Feuerriegel with contributions from Daniel Bennett and 
 % Phillip M. Alday. 
 %
@@ -165,6 +165,7 @@ ncond = size(cond_labels, 2);
 %% Multivariate Classification/Regression Parameters
 
 analysis_mode = 1; % ANALYSIS mode (1 = SVM classification with LIBSVM / 2 = SVM classification with LIBLINEAR / 3 = SVR with LIBSVM)
+normalise_data = 1; % Normalise data for each feature prior to decoding? 1 = Yes / 0 = No
 stmode = 1; % SPACETIME mode (1 = spatial / 2 = temporal / 3 = spatio-temporal)
 avmode = 1; % AVERAGE mode (1 = no averaging; use single-trial data / 2 = use run-averaged data). Note: Single trials needed for SVR
 window_width_ms = 50; % Width of sliding analysis window in ms
@@ -181,7 +182,14 @@ feat_weights_mode = 1; % Extract feature weights? 0 = no / 1 = yes
 % Single subject decoding results plotting
 display_on = 1; % Display single subject decoding performance results? 0 = no / 1 = yes
 perm_disp = 1; % Display the permuted labels decoding results in figure? 0 = no / 1 = yes
+plotting_mode = 'classic'; % Plotting style. Current options are 'cooper' and 'classic'
+x_tick_spacing_steps = 5; % Number of time steps between X axis time labels. If set to empty ([]) then plotting defaults are used.
 
+% 'quiet mode' option to suppress text output to the command line
+quiet_mode = 0; 
+% 1 = Allow all text output to command line
+% 2 = Show only important warnings and analysis related info (makes decoding run faster)
+% 3 = No text output
 
 
 
@@ -220,6 +228,10 @@ cfg.permut_rep = permut_rep;
 cfg.feat_weights_mode = feat_weights_mode;
 cfg.display_on = display_on;
 cfg.perm_disp = perm_disp;
+cfg.normalise_data = normalise_data;
+cfg.plotting_mode = plotting_mode;
+cfg.x_tick_spacing_steps = x_tick_spacing_steps;
+cfg.quiet_mode = quiet_mode;
 
 
 

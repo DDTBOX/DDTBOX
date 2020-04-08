@@ -52,7 +52,7 @@ function [acc, feat_weights, feat_weights_corrected] = do_my_classification(vect
 %                               method in Haufe et al. (2014).
 %
 %
-% Copyright (c) 2013-2019: DDTBOX has been developed by Stefan Bode 
+% Copyright (c) 2013-2020: DDTBOX has been developed by Stefan Bode 
 % and Daniel Feuerriegel with contributions from Daniel Bennett and 
 % Phillip M. Alday. 
 %
@@ -76,6 +76,13 @@ function [acc, feat_weights, feat_weights_corrected] = do_my_classification(vect
 Samples = vectors_train;
 Labels = labels_train;
 
+% Normalise the training data prior to SVM classification/regression, if selected by user.
+if cfg.normalise_data
+   
+    [Samples, feature_min_vals, feature_max_vals] = dd_normalise_data_training(Samples);
+    
+end % of if cfg.normalise_data
+
 
 %% Training the SVMs
 
@@ -95,16 +102,24 @@ end % of if sum
 Samples = vectors_test;
 Labels = labels_test;
 
+% Normalise the test data prior to SVM classification/regression, if selected by user.
+if cfg.normalise_data
+   
+    [Samples] = dd_normalise_data_test(Samples, feature_min_vals, feature_max_vals);
+    
+end % of if cfg.normalise_data
+
+
 
 %% Prediction (Test the Classifier)
 
 if sum(cfg.analysis_mode == [1, 3]) % libsvm
     
-    [predicted_label, accuracy, decision_values] = svmpredict(Labels, Samples, model);
+    [predicted_label, accuracy, decision_values] = svmpredict(Labels, Samples, model, cfg.backend_flags.quiet_mode_flag);
     
 elseif sum(cfg.analysis_mode == [2]) % liblinear
     
-    [predicted_label, accuracy, decision_values] = predict(Labels, sparse(Samples), model); 
+    [predicted_label, accuracy, decision_values] = predict(Labels, sparse(Samples), model, cfg.backend_flags.quiet_mode_flag); 
     
 end % of if sum
 

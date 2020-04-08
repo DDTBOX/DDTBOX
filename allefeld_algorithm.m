@@ -74,7 +74,7 @@ function [Results, Params] = allefeld_algorithm(observed_data, permtest_data, va
 % Example:      % [Results, Params] = allefeld_algorithm(observed_data, permtest_data, 'P2', 100000, 'alpha_level', 0.05)
 %
 %
-% Copyright (c) 2013-2019: DDTBOX has been developed by Stefan Bode 
+% Copyright (c) 2013-2020: DDTBOX has been developed by Stefan Bode 
 % and Daniel Feuerriegel with contributions from Daniel Bennett and 
 % Phillip M. Alday. 
 %
